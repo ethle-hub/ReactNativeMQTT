@@ -1,29 +1,64 @@
-/* eslint-disable react/jsx-no-undef */
 // src/components/MQTTDemoApp.tsx
 
-/* eslint-disable react-native/no-inline-styles */
-
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
+  FlatList,
   //ScrollView,
   //SafeAreaView,
   //StatusBar,
 } from 'react-native';
 
 import AppHeader from './AppHeader';
+import ListItem from './ListItem';
 
 // component
 const MQTTDemoApp = () => {
+  const [items, setItems] = useState([
+    {
+      id: 1,
+      text: 'Milk',
+    },
+    {
+      id: 2,
+      text: 'Eggs',
+    },
+    {
+      id: 3,
+      text: 'Bread',
+    },
+    {
+      id: 4,
+      text: 'Juice',
+    },
+  ]);
+
+  const [checkedItems, checkedItemChange] = useState([]);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <AppHeader />
       </View>
       <View style={[styles.main, styles.threeQuarterHeight]}>
-        <Text>{'MAIN'}</Text>
+        <FlatList
+          data={items}
+          renderItem={({item}) => (
+            <ListItem
+              item={item}
+              // deleteItem={deleteItem}
+              // editItem={editItem}
+              // isEditing={editStatus}
+              // editItemDetail={editItemDetail}
+              // saveEditItem={saveEditItem}
+              // handleEditChange={handleEditChange}
+              // itemChecked={itemChecked}
+              checkedItems={checkedItems}
+            />
+          )}
+        />
       </View>
       <View style={[styles.footer, styles.quarterHeight]}>
         <Text>{'FOOTER'}</Text>
@@ -41,7 +76,7 @@ const styles = StyleSheet.create({
     // margin: 5,
   },
   header: {
-    backgroundColor: 'powderblue',
+    backgroundColor: 'darkslateblue',
     borderWidth: 5,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
