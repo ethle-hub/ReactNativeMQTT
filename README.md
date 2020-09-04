@@ -28,15 +28,15 @@ react-native run-android --version X.XX.X
 
 ```
 npm install react-native-vector-icons --save
-
 ```
 
 ## Usage
 
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+## Troubleshooting
 
-Please make sure to update tests as appropriate.
++ WHen you see error about Metro bundler, clear the cache as below in seperate command line terminal
 
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+````
+react-native start --reset-cache
+````
+
