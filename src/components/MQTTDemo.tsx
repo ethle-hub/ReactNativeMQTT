@@ -1,11 +1,12 @@
 // src/components/MQTTDemoApp.tsx
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
- View,
+  View,
   StyleSheet,
   FlatList,
   Text,
+  ActivityIndicator,
   //ScrollView,
   //SafeAreaView,
   //StatusBar,
@@ -16,48 +17,16 @@ import AppHeader from './AppHeader';
 
 // component
 const MQTTDemoApp = () => {
-  // const [items, setItems] = useState([
-  //   {
-  //     id: 1,
-  //     text: 'Milk',
-  //   },
-  //   {
-  //     id: 2,
-  //     text: 'Eggs',
-  //   },
-  //   {
-  //     id: 3,
-  //     text: 'Bread',
-  //   },
-  //   {
-  //     id: 4,
-  //     text: 'Juice',
-  //   },
-  // ]);
-  // const [checkedItems, checkedItemChange] = useState([]);
-  const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-  ];
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
 
-  // item component
-  const Item = ({title}) => (
-    <View style={styles.item}>
-      <Text style={styles.title}>{title}</Text>
-    </View>
-  );
-
-  const renderItem = ({item}) => <Item title={item.title} />;
+  useEffect(() => {
+    fetch('https://reactnative.dev/movies.json')
+      .then((response) => response.json())
+      .then((json) => setData(json.movies))
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -69,11 +38,24 @@ const MQTTDemoApp = () => {
         />
       </View>
       <View style={[styles.row, styles.main, styles.four]}>
-        <FlatList
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <FlatList
+            data={data}
+            keyExtractor={({id}, index) => id}
+            renderItem={({item}) => (
+              <Text>
+                {item.title}, {item.releaseYear}
+              </Text>
+            )}
+          />
+        )}
+        {/* <FlatList
           data={DATA}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
-        />
+        /> */}
 
         {/* <FlatList
           data={items}
