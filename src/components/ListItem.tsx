@@ -18,11 +18,12 @@ const ListItem = ({
   saveEditItem,
   handleEditChange,
   itemChecked,
-  checkedItems,
+  //checkedItems,
 }) => {
-  const checked = checkedItems.filter(
-    (checkedItem) => checkedItem.id === item.id,
-  );
+  const checked = '';
+  // const checked = checkedItems.filter(
+  //   (checkedItem) => checkedItem.id === item.id,
+  // );
   return (
     <TouchableOpacity style={styles.listItem}>
       <View style={styles.listItemView}>

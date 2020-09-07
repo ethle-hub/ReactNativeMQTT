@@ -4,69 +4,65 @@
 import React from 'react';
 import {Platform, View, Text, Image, StyleSheet} from 'react-native';
 
-const AppHeader = () => {
-  // re: image source
+export interface IAppHeaderProps {
+  title: string;
+  iconUri: string;
+}
 
-  // (option 1)
-  //   const icon = {
-  //     uri:
-  //       'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==',
-  //   };
-
-  // (option 2)
-  //const icon = {uri: 'https://reactnative.dev/docs/assets/p_cat2.png'};
-
-  // or (option 3)
-  const icon = {
-    uri: 'https://image.winudf.com/v2/image/YnIuY29tLmJpbnRlY2hub2xvZ3kubXF0dGNsaWVudF9pY29uX3M1Z2J5eTA0/icon.png?w=170&fakeurl=1',
-    method: 'POST',
-    headers: {
-      Pragma: 'no-cache',
-    },
-    body: 'Your Body goes here',
-  };
-
+const AppHeader: React.FC<IAppHeaderProps> = (props) => {
   return (
-    <>
-      {/* top row */}
-      <View style={[styles.row]}>
-        {/* left: app-logo*/}
-        <Image style={[styles.column, styles.left, styles.image]}source={icon} />
-        {/* right: help-icon*/}
-        <Text style={[styles.column, styles.right, styles.platformText]}>{'hello'}</Text>
+    <View style={styles.container}>
+      <View
+        style={[styles.row, styles.topRow, styles.spaceBetween]}>
+        <Image
+          style={[styles.image]}
+          source={{uri: props.iconUri}}
+        />
+        <Text style={[styles.platformText]}>
+          {'hello '}
+          {Platform.OS}
+        </Text>
       </View>
 
-      {/* bottom row */}
-      <View style={[styles.row, styles.left]}>
-        <Text style={styles.bigText}>{'My App'}</Text>
+      <View
+        style={[styles.row, styles.bottomRow]}>
+        <Text style={[styles.box3, styles.bigText]}>{props.title}</Text>
       </View>
-    </>
+    </View>
   );
 };
 
 // styles
 const styles = StyleSheet.create({
-  wrapper: {
+  // basics layout style
+  container: {
     flex: 1,
-    padding: 0,
-    margin: 0,
-  },
-  column: {
     flexDirection: 'column',
-    //alignItems: 'flex-end',  // e.g. align horizontally enum('flex-start', 'flex-end', 'center', 'stretch', 'baseline')
-    alignContent: 'space-between', // enum('flex-start', 'flex-end', 'center', 'stretch', 'space-between', 'space-around')
-    minWidth: 60,
   },
   row: {
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'flex-start', // enum('flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'space-evenly')
-    minHeight: 50,
   },
-  left: {alignSelf: 'flex-start', backgroundColor: 'aquamarine'},
-  right: {alignSelf: 'flex-end', backgroundColor: 'skyblue'},
-  center: {
-    justifyContent: 'center', // enum('flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'space-evenly')
-    backgroundColor: 'yellow',
+
+  topRow:{
+    backgroundColor: 'green',
+  },
+  bottomRow:{
+    backgroundColor: 'lightblue',
+  },
+
+  spaceEvenly: {
+    justifyContent: 'space-evenly',
+  },
+
+  spaceBetween: {
+    justifyContent: 'space-between',
+  },
+
+  //! specific styles
+  image: {
+    width: 50,
+    height: 50,
   },
   platformText: {
     fontFamily: 'Cochin',
@@ -76,14 +72,10 @@ const styles = StyleSheet.create({
       Platform.OS === 'ios'
         ? 'red'
         : Platform.OS === 'android'
-        ? 'green'
+        ? 'lightblue'
         : 'blue',
   },
   bigText: {fontSize: 40,fontWeight: 'bold', color: 'crimson' },
-  image: {
-    width: 50,
-    height: 50,
-  },
 });
 
 export default AppHeader;
