@@ -2,7 +2,7 @@
 // This is a dumb React components
 
 import React from 'react';
-import {Platform, View, Text, Image, StyleSheet} from 'react-native';
+import {Platform, View, Text, Image, StyleSheet, PixelRatio} from 'react-native';
 
 export interface IAppHeaderProps {
   title: string;
@@ -19,11 +19,9 @@ const AppHeader: React.FC<IAppHeaderProps> = (props) => {
           source={{uri: props.iconUri}}
         />
         <Text style={[styles.platformText]}>
-          {'hello '}
-          {Platform.OS}
+          OS: {Platform.OS}
         </Text>
       </View>
-
       <View
         style={[styles.row, styles.bottomRow]}>
         <Text style={[styles.box3, styles.bigText]}>{props.title}</Text>
@@ -61,8 +59,8 @@ const styles = StyleSheet.create({
 
   //! specific styles
   image: {
-    width: 50,
-    height: 50,
+    width: PixelRatio.getPixelSizeForLayoutSize(25),
+    height: PixelRatio.getPixelSizeForLayoutSize(25),
   },
   platformText: {
     fontFamily: 'Cochin',
@@ -75,7 +73,7 @@ const styles = StyleSheet.create({
         ? 'lightblue'
         : 'blue',
   },
-  bigText: {fontSize: 40,fontWeight: 'bold', color: 'crimson' },
+  bigText: {fontSize: PixelRatio.getPixelSizeForLayoutSize(15),fontWeight: 'bold', color: 'crimson' },
 });
 
 export default AppHeader;

@@ -64,8 +64,8 @@ const MQTTDemoApp = () => {
       <View style={[styles.row, styles.header, styles.one]}>
         <AppHeader
           style={[styles.row, styles.header, styles.one]}
-          title={'My App'}
-          iconUri={'https://reactnative.dev/docs/assets/p_cat2.png'}
+          title={'React Native MQTT'}
+          iconUri={'https://reactnative.dev/docs/assets/p_cat1.png'}
         />
       </View>
       <View style={[styles.row, styles.main, styles.four]}>
@@ -141,15 +141,7 @@ const styles = StyleSheet.create({
   row: {
     flex: 1,
     flexDirection: 'row',
-
-    //! 'justifyContent' describes how to align children within the main axis of their container.
-    //justifyContent: 'flex-start', // (default value) Align children of a container to the start of the container's main axis.
-    //justifyContent: 'flex-end', //  Align children of a container to the end of the container's main axis.
-    //justifyContent: 'center ', // Align children of a container in the center of the container's main axis.
     justifyContent: 'space-between', // Evenly space off children across the container's main axis, distributing the remaining space between the children.
-    //justifyContent: 'space-around', // Compared to space-between, using space-around will result in space being distributed to the beginning of the first child and end of the last child.
-    //justifyContent: 'space-evenly', // Evenly distribute children within the alignment container along the main axis
-
     marginBottom: 5,
   },
 
@@ -206,6 +198,12 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
+  },
+
+  iconView: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: 70,
   },
 });
 
