@@ -13,7 +13,7 @@ const initialState = {
 };
 
 const messageReducer = (state = initialState, action) => {
-  console.log(`messageReducer => ${action.type}`);
+  //console.log(`messageReducer => ${action.type}`);
   //console.log(state.messages);
   switch (action.type) {
     case ADD_MESSAGE:
@@ -32,26 +32,15 @@ const messageReducer = (state = initialState, action) => {
           {cancelable: true},
         );
         return state;
-      } else {  
-        const id = uuidv4(); 
+      } else {
+        const id = uuidv4();
         return {
-          messages: [            
-            [
-              //e.g.  {id: '1', title: 'Star Wars', releaseYear: '1977'}
-              {
-                id: id,
-                key: id,
-                title: action.msgText, 
-              },
-              ...state.messages,
-            ],
-          ],
+          messages: [{id: id, title: action.msgText}, ...state.messages],
         };
       }
     case DELETE_MESSAGE:
       console.log(`DELETE_MESSAGE => ${action.msgId}`);
-      console.log(state.messages);
-      return {                
+      return {
         messages: state.messages.filter((item) => item.id !== action.msgId),
       };
     default: {
