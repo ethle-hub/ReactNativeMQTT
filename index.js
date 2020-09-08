@@ -1,11 +1,19 @@
 /**
  * @format
  */
-
+import React from 'react';
 import {AppRegistry} from 'react-native';
-//import App from './App';  // default app when project was initialized
-import App from './src/components/MQTTDemo'; // our experiment all
-//import App from './src/components/VectorIconSample'; // 3rd party app
 import {name as appName} from './app.json';
+//import App from './App';  // default app when project was initialized
+import App from './src/components/MQTTDemo'; // inhere, we use our experiment React component 'MQTTDemo' as the main app
 
-AppRegistry.registerComponent(appName, () => App);
+import {Provider} from 'react-redux';
+import appStore from './src/AppStore';
+
+const MQTTDemoApp = () => (
+  <Provider store={appStore()}>
+    <App />
+  </Provider>
+);
+
+AppRegistry.registerComponent(appName, () => MQTTDemoApp);

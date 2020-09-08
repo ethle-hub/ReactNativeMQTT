@@ -19,7 +19,7 @@ import AppHeader from './AppHeader';
 import AddMessage from './AddMessage';
 
 // component
-const MQTTDemoApp = () => {
+const MQTTDemo = () => {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
@@ -42,13 +42,13 @@ const MQTTDemoApp = () => {
         name="remove"
         size={20}
         color="firebrick"
-        onPress={() => onDeleteMessage(item.id)}
+        onPress={() => deleteMessage(item.id)}
         style={styles.iconView}
       />
     </View>
   );
 
-  const onAddMessage = (text) => {
+  const addMessage = (text) => {
     if (!text) {
       Alert.alert(
         'No item entered',
@@ -65,14 +65,13 @@ const MQTTDemoApp = () => {
       // Breaking the Rules of Hooks?
       setData((prevItems) => {
         return [{id: uuidv4(), title: text}, ...prevItems];
-        //return [...prevItems];
       });
     }
   };
 
-  const onDeleteMessage = (id) => {
+  const deleteMessage = (id) => {
     setData((prevItems) => {
-      return prevItems.filter((item) => item.id !== id);
+      return [...prevItems.filter((item) => item.id !== id)];
     });
   };
 
@@ -86,7 +85,7 @@ const MQTTDemoApp = () => {
         />
       </View>
       <View style={[styles.row, styles.main, styles.four]}>
-        <AddMessage onAddMessage={onAddMessage} />
+        <AddMessage onAddMessage={addMessage} />
         {isLoading ? (
           <ActivityIndicator />
         ) : (
@@ -180,4 +179,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MQTTDemoApp;
+export default MQTTDemo;
