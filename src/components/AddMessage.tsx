@@ -23,6 +23,7 @@ const AddMessage = ({onAddMessage, style}) => {
       <TouchableOpacity
         style={styles.btn}
         onPress={() => {
+          console.log(`AddMessage's stateProps[text] = ${text}`);
           onAddMessage(text);
           setText('');
         }}>

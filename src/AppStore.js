@@ -1,5 +1,5 @@
 import {createStore, combineReducers} from 'redux';
-import messageReducer from './reducers/MessageReducer';
+import messageReducer from './reducers/messageReducer';
 
 const rootReducer = combineReducers({
   messageReducer: messageReducer,

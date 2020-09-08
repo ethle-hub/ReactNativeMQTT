@@ -14,13 +14,13 @@ import {
   //StatusBar,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import {v4 as uuidv4} from 'uuid';
+//import {v4 as uuidv4} from 'uuid';
 
 import AppHeader from './AppHeader';
 import AddMessage from './AddMessage';
 
 import {connect} from 'react-redux';
-import {deleteMessage, addMessage} from '../actions/message';
+import {deleteMessageAction, addMessageAction} from '../actions/message';
 
 // component
 const MQTTDemo = ({messages, deleteMessage, addMessage}) => {
@@ -103,9 +103,9 @@ const MQTTDemo = ({messages, deleteMessage, addMessage}) => {
         ) : ( */}
         <FlatList
           data={messages}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.key}
           renderItem={({item}) => (
-            <View style={styles.listItemView}>
+            <View style={styles.listItemView} key={item.key}>
               <Text>
                 {item.title}, {item.releaseYear}
               </Text>
@@ -114,7 +114,10 @@ const MQTTDemo = ({messages, deleteMessage, addMessage}) => {
                 size={20}
                 color="firebrick"
                 //onPress={() => deleteMessage(item.id)}
-                onPress={() => deleteMessage(item.id)}
+                onPress={() => {
+                  //console.log(`item.id = ${item.id}`);
+                  deleteMessage(item.id);
+                }}
                 style={styles.iconView}
               />
             </View>
@@ -222,8 +225,8 @@ const mapStateToProps = (state /*, ownProps?*/) => {
 const mapDispatchToProps = (dispatch /*,, ownProps*/) => {
   // return a object containing functions
   return {
-    deleteMessage: (messageId) => dispatch(deleteMessage(messageId)),
-    addMessage: (messageItem) => dispatch(addMessage(messageItem)),
+    deleteMessage: (msgId) => dispatch(deleteMessageAction(msgId)),
+    addMessage: (msgText) => dispatch(addMessageAction(msgText)),
   };
 };
 
