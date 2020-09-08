@@ -7,13 +7,16 @@ import {
   FlatList,
   Text,
   ActivityIndicator,
+  Alert,
   //ScrollView,
   //SafeAreaView,
   //StatusBar,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import {v4 as uuidv4} from 'uuid';
 
 import AppHeader from './AppHeader';
-//import ListItem from './ListItem';
+import AddMessage from './AddMessage';
 
 // component
 const MQTTDemoApp = () => {
@@ -23,10 +26,55 @@ const MQTTDemoApp = () => {
   useEffect(() => {
     fetch('https://reactnative.dev/movies.json')
       .then((response) => response.json())
-      .then((json) => setData(json.movies))
+      .then((json) => setData(json.movies)) // e.g. "movies": [{ "id": "1", "title": "Star Wars", "releaseYear": "1977" },]
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
   }, []);
+
+  // functions
+
+  const renderMessageItem = ({item}) => (
+    <View style={styles.listItemView}>
+      <Text>
+        {item.title}, {item.releaseYear}
+      </Text>
+      <Icon
+        name="remove"
+        size={20}
+        color="firebrick"
+        onPress={() => onDeleteMessage(item.id)}
+        style={styles.iconView}
+      />
+    </View>
+  );
+
+  const onAddMessage = (text) => {
+    if (!text) {
+      Alert.alert(
+        'No item entered',
+        'Please enter an movie title to your list',
+        [
+          {
+            text: 'ok',
+            style: 'cancel',
+          },
+        ],
+        {cancelable: true},
+      );
+    } else {
+      // Breaking the Rules of Hooks?
+      setData((prevItems) => {
+        return [{id: uuidv4(), title: text}, ...prevItems];
+        //return [...prevItems];
+      });
+    }
+  };
+
+  const onDeleteMessage = (id) => {
+    setData((prevItems) => {
+      return prevItems.filter((item) => item.id !== id);
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -38,76 +86,19 @@ const MQTTDemoApp = () => {
         />
       </View>
       <View style={[styles.row, styles.main, styles.four]}>
+        <AddMessage onAddMessage={onAddMessage} />
         {isLoading ? (
           <ActivityIndicator />
         ) : (
           <FlatList
             data={data}
-            keyExtractor={({id}, index) => id}
-            renderItem={({item}) => (
-              <Text>
-                {item.title}, {item.releaseYear}
-              </Text>
-            )}
+            keyExtractor={(item) => item.id}
+            renderItem={renderMessageItem}
           />
         )}
-        {/* <FlatList
-          data={DATA}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-        /> */}
-
-        {/* <FlatList
-          data={items}
-          renderItem={({item}) => (
-            <ListItem
-              item={item}
-              // deleteItem={deleteItem}
-              // editItem={editItem}
-              // isEditing={editStatus}
-              // editItemDetail={editItemDetail}
-              // saveEditItem={saveEditItem}
-              // handleEditChange={handleEditChange}
-              // itemChecked={itemChecked}
-              checkedItems={checkedItems}
-            />
-          )}
-        /> */}
       </View>
       <View style={[styles.row, styles.footer, styles.one]}>
-        {/* <Text>{'FOOTER'}</Text> */}
-        <View style={styles.row}>
-          <View style={[styles.box, styles.box2]} />
-          <View style={[styles.box, styles.box3]} />
-          <View style={[styles.box, styles.two]} />
-        </View>
-
-        <View style={styles.row}>
-          <View style={[styles.box, styles.two]} />
-          <View style={[styles.box, styles.box2]} />
-          <View style={[styles.box, styles.box3]} />
-        </View>
-
-        <View style={styles.row}>
-          <View style={[styles.box, styles.box2]} />
-          <View style={[styles.box, styles.two]} />
-          <View style={[styles.box, styles.box3]} />
-        </View>
-
-        <View style={styles.row}>
-          <View style={[styles.box, styles.box2]} />
-          <View style={[styles.box]} />
-          <View style={[styles.box, styles.box3]} />
-        </View>
-
-        <View style={styles.row}>
-          <View style={[styles.box, styles.box2]} />
-          <View style={[styles.box]} />
-        </View>
-
-        <View style={styles.row}>
-          <View style={[styles.box]} />
-        </View>
+        <Text>{'FOOTER'}</Text>
       </View>
     </View>
   );
@@ -121,8 +112,6 @@ const styles = StyleSheet.create({
   },
 
   row: {
-    flex: 1,
-    flexDirection: 'row',
     justifyContent: 'space-between', // Evenly space off children across the container's main axis, distributing the remaining space between the children.
     marginBottom: 5,
   },
@@ -174,12 +163,14 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
-
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+  listItemView: {
+    marginLeft: 5,
+    marginRight: 5,
+    padding: 15,
+    backgroundColor: '#dce2ff',
+    borderBottomWidth: 1,
+    borderColor: '#eee',
+    flexDirection: 'column',
   },
 
   iconView: {
