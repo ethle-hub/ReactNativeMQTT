@@ -1,11 +1,11 @@
-import {ADD_MESSAGE, DELETE_MESSAGE} from '../actions.types';
+import {ADD_MESSAGE, DELETE_MESSAGE} from '../actions/types';
 
-export const AddMessage = (messageItem) => ({
+export const addMessage = (messageItem) => ({
   type: ADD_MESSAGE,
-  data: messageItem,
+  text: messageItem,
 });
 
-export const DeleteMessage = (messageId) => ({
+export const deleteMessage = (messageId) => ({
   type: DELETE_MESSAGE,
-  data: messageId,
+  id: messageId,
 });

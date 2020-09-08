@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 // src/components/MQTTDemoApp.tsx
 
 import React, {useState, useEffect} from 'react';
@@ -6,8 +7,8 @@ import {
   StyleSheet,
   FlatList,
   Text,
-  ActivityIndicator,
-  Alert,
+  //ActivityIndicator,
+  //Alert,
   //ScrollView,
   //SafeAreaView,
   //StatusBar,
@@ -18,63 +19,74 @@ import {v4 as uuidv4} from 'uuid';
 import AppHeader from './AppHeader';
 import AddMessage from './AddMessage';
 
-// component
-const MQTTDemo = () => {
-  const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
+import {connect} from 'react-redux';
+import {deleteMessage, addMessage} from '../actions/message';
 
-  useEffect(() => {
-    fetch('https://reactnative.dev/movies.json')
-      .then((response) => response.json())
-      .then((json) => setData(json.movies)) // e.g. "movies": [{ "id": "1", "title": "Star Wars", "releaseYear": "1977" },]
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
-  }, []);
+// component
+const MQTTDemo = ({messages, deleteMessage, addMessage}) => {
+  /*
+   * BEFORE USING REDUX STORE
+   */
+
+  // const [isLoading, setLoading] = useState(true);
+  // const [data, setData] = useState([]);
+
+  // useEffect(() => {
+  //   fetch('https://reactnative.dev/movies.json')
+  //     .then((response) => response.json())
+  //     .then((json) => setData(json.movies)) // e.g. "movies": [{ "id": "1", "title": "Star Wars", "releaseYear": "1977" },]
+  //     .catch((error) => console.error(error))
+  //     .finally(() => setLoading(false));
+  // }, []);
 
   // functions
 
-  const renderMessageItem = ({item}) => (
-    <View style={styles.listItemView}>
-      <Text>
-        {item.title}, {item.releaseYear}
-      </Text>
-      <Icon
-        name="remove"
-        size={20}
-        color="firebrick"
-        onPress={() => deleteMessage(item.id)}
-        style={styles.iconView}
-      />
-    </View>
-  );
+  // const renderMessageItem = ({item}) => (
+  //   <View style={styles.listItemView}>
+  //     <Text>
+  //       {item.title}, {item.releaseYear}
+  //     </Text>
+  //     <Icon
+  //       name="remove"
+  //       size={20}
+  //       color="firebrick"
+  //       onPress={() => this.props.delete(item.id)}
+  //       style={styles.iconView}
+  //     />
+  //   </View>
+  // );
 
-  const addMessage = (text) => {
-    if (!text) {
-      Alert.alert(
-        'No item entered',
-        'Please enter an movie title to your list',
-        [
-          {
-            text: 'ok',
-            style: 'cancel',
-          },
-        ],
-        {cancelable: true},
-      );
-    } else {
-      // Breaking the Rules of Hooks?
-      setData((prevItems) => {
-        return [{id: uuidv4(), title: text}, ...prevItems];
-      });
-    }
-  };
+  // const addMessage = (text) => {
+  //   if (!text) {
+  //     Alert.alert(
+  //       'No item entered',
+  //       'Please enter an movie title to your list',
+  //       [
+  //         {
+  //           text: 'ok',
+  //           style: 'cancel',
+  //         },
+  //       ],
+  //       {cancelable: true},
+  //     );
+  //   } else {
+  //     // Breaking the Rules of Hooks?
+  //     setData((prevItems) => {
+  //       return [{id: uuidv4(), title: text}, ...prevItems];
+  //     });
+  //   }
+  // };
 
-  const deleteMessage = (id) => {
-    setData((prevItems) => {
-      return [...prevItems.filter((item) => item.id !== id)];
-    });
-  };
+  // const deleteMessage = (id) => {
+  //   console.log(id);
+  //   setData((prevItems) => {
+  //     return [...prevItems.filter((item) => item.id !== id)];
+  //   });
+  // };
 
+  /*
+   * AFTER ADDING REDUX
+   */
   return (
     <View style={styles.container}>
       <View style={[styles.row, styles.header, styles.one]}>
@@ -86,15 +98,29 @@ const MQTTDemo = () => {
       </View>
       <View style={[styles.row, styles.main, styles.four]}>
         <AddMessage onAddMessage={addMessage} />
-        {isLoading ? (
+        {/* {isLoading ? (
           <ActivityIndicator />
-        ) : (
-          <FlatList
-            data={data}
-            keyExtractor={(item) => item.id}
-            renderItem={renderMessageItem}
-          />
-        )}
+        ) : ( */}
+        <FlatList
+          data={messages}
+          keyExtractor={(item) => item.id}
+          renderItem={({item}) => (
+            <View style={styles.listItemView}>
+              <Text>
+                {item.title}, {item.releaseYear}
+              </Text>
+              <Icon
+                name="remove"
+                size={20}
+                color="firebrick"
+                //onPress={() => deleteMessage(item.id)}
+                onPress={() => deleteMessage(item.id)}
+                style={styles.iconView}
+              />
+            </View>
+          )}
+        />
+        {/* )} */}
       </View>
       <View style={[styles.row, styles.footer, styles.one]}>
         <Text>{'FOOTER'}</Text>
@@ -179,4 +205,27 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MQTTDemo;
+/**
+ * Let mapStateToProps Reshape the Data from the Store
+ * https://react-redux.js.org/using-react-redux/connect-mapstate#defining-mapstatetoprops
+ * @param {state}     state  is the entire Redux store state e.g. store.getState()
+ * @param {ownProps}  ownProps will contain all of the props given to the wrapper component that was generated by connect.
+ * @return {Object}   return a plain object that contains the data the component needs:
+ */
+const mapStateToProps = (state /*, ownProps?*/) => {
+  // return a state object
+  return {
+    messages: state.messageReducer.messages,
+  };
+};
+
+const mapDispatchToProps = (dispatch /*,, ownProps*/) => {
+  // return a object containing functions
+  return {
+    deleteMessage: (messageId) => dispatch(deleteMessage(messageId)),
+    addMessage: (messageItem) => dispatch(addMessage(messageItem)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MQTTDemo);
+//export default MQTTDemo;
