@@ -4,11 +4,11 @@ import {Alert} from 'react-native';
 
 const initialState = {
   messages: [
-    {key: '1', title: 'Star Wars', releaseYear: '1977'},
-    {key: '2', title: 'Back to the Future', releaseYear: '1985'},
-    {key: '3', title: 'The Matrix', releaseYear: '1999'},
-    {key: '4', title: 'Inception', releaseYear: '2010'},
-    {key: '5', title: 'Interstellar', releaseYear: '2014'},
+    {id: '1', title: 'Star Wars', releaseYear: '1977'},
+    {id: '2', title: 'Back to the Future', releaseYear: '1985'},
+    {id: '3', title: 'The Matrix', releaseYear: '1999'},
+    {id: '4', title: 'Inception', releaseYear: '2010'},
+    {id: '5', title: 'Interstellar', releaseYear: '2014'},
   ],
 };
 
@@ -33,13 +33,13 @@ const messageReducer = (state = initialState, action) => {
         );
         return state;
       } else {
-        const id = uuidv4();
         return {
-          messages: [{id: id, title: action.msgText}, ...state.messages],
+          messages: [{id: uuidv4(), title: action.msgText}, ...state.messages],
         };
       }
     case DELETE_MESSAGE:
       console.log(`DELETE_MESSAGE => ${action.msgId}`);
+      console.log(action);
       return {
         messages: state.messages.filter((item) => item.id !== action.msgId),
       };

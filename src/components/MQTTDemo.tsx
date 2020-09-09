@@ -103,9 +103,9 @@ const MQTTDemo = ({messages, deleteMessage, addMessage}) => {
         ) : ( */}
         <FlatList
           data={messages}
-          keyExtractor={(item) => item.key}
+          keyExtractor={(item) => item.id}
           renderItem={({item}) => (
-            <View style={styles.listItemView} key={item.key}>
+            <View style={styles.listItemView}>
               <Text>
                 {item.title}, {item.releaseYear}
               </Text>
@@ -115,7 +115,8 @@ const MQTTDemo = ({messages, deleteMessage, addMessage}) => {
                 color="firebrick"
                 //onPress={() => deleteMessage(item.id)}
                 onPress={() => {
-                  //console.log(`item.id = ${item.id}`);
+                  console.log(item);
+                  console.log(`item.id = ${item.id}`);
                   deleteMessage(item.id);
                 }}
                 style={styles.iconView}
