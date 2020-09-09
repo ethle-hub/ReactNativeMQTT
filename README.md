@@ -40,3 +40,18 @@ npm install react-native-vector-icons --save
 react-native start --reset-cache
 ````
 
+
+## Fixed npm package versions
+
+By default npm installs packages using `^` which means any version in the same major range, you can switch this behaviour by using `--save-exact`
+
+```
+// npm
+npm install --save --save-exact react
+
+// yarn
+yarn add --exact react
+
+```
+
+
