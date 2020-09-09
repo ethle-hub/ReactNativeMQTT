@@ -1,12 +1,13 @@
-/* eslint-disable no-shadow */
 // src/components/MQTTDemoApp.tsx
 
-import React, {useState, useEffect} from 'react';
+import React from 'react'; // , {useState, useEffect}
+
 import {
   View,
   StyleSheet,
   FlatList,
   Text,
+  Button,
   //ActivityIndicator,
   //Alert,
   //ScrollView,
@@ -14,16 +15,15 @@ import {
   //StatusBar,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-//import {v4 as uuidv4} from 'uuid';
 
-import AppHeader from './AppHeader';
+//import AppHeader from './AppHeader';
 import AddMessage from './AddMessage';
 
 import {connect} from 'react-redux';
 import {deleteMessageAction, addMessageAction} from '../actions/message';
 
 // component
-const MQTTDemo = ({messages, deleteMessage, addMessage}) => {
+const MQTTDemo = ({messages, deleteMessage, addMessage, navigation}) => {
   /*
    * BEFORE USING REDUX STORE
    */
@@ -89,11 +89,25 @@ const MQTTDemo = ({messages, deleteMessage, addMessage}) => {
    */
   return (
     <View style={styles.container}>
-      <View style={[styles.row, styles.header, styles.one]}>
-        <AppHeader
+      <View style={[styles.column, styles.header, styles.one]}>
+        {/* <AppHeader
           style={[styles.row, styles.header, styles.one]}
           title={'React Native MQTT'}
           iconUri={'https://reactnative.dev/docs/assets/p_cat1.png'}
+        /> */}
+        <Text>Details Screen</Text>
+        <Button
+          title="Go to `this screen... again"
+          onPress={() => navigation.push('MQTTDemo')}
+        />
+        <Button
+          title="Go to Home"
+          onPress={() => navigation.navigate('Home')}
+        />
+        <Button title="Go back" onPress={() => navigation.goBack()} />
+        <Button
+          title="Go to Top screen"
+          onPress={() => navigation.popToTop()}
         />
       </View>
       <View style={[styles.row, styles.main, styles.four]}>
@@ -138,6 +152,10 @@ const styles = StyleSheet.create({
   // basics layout style
   container: {
     flex: 1,
+  },
+  column: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   row: {
@@ -232,4 +250,3 @@ const mapDispatchToProps = (dispatch /*,, ownProps*/) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MQTTDemo);
-//export default MQTTDemo;

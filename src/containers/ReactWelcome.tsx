@@ -14,6 +14,7 @@ import {
   View,
   Text,
   StatusBar,
+  Button,
 } from 'react-native';
 
 import {
@@ -24,10 +25,14 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-const App: () => React$Node = () => {
+const ReactWelcome: () => React$Node = ({navigation}) => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
+      <Button
+        title="Go to MQTTDemo screen"
+        onPress={() => navigation.navigate('MQTTDemo', {name: 'Jane'})}
+      />
       <SafeAreaView>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
@@ -111,4 +116,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default ReactWelcome;
