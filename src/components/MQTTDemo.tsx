@@ -22,11 +22,13 @@ import AddMessage from './AddMessage';
 import {connect} from 'react-redux';
 import {deleteMessageAction, addMessageAction} from '../actions/message';
 
+import {MQTTService} from '../services/MQTTService';
+
 // component
 const MQTTDemo = ({messages, deleteMessage, addMessage, navigation}) => {
-  /*
-   * BEFORE USING REDUX STORE
-   */
+  const mqtt = new MQTTService('my-super-secret-auth-token');
+  mqtt.channel = 'test';
+  mqtt.booking = 'booking';
 
   // const [isLoading, setLoading] = useState(true);
   // const [data, setData] = useState([]);
@@ -39,54 +41,10 @@ const MQTTDemo = ({messages, deleteMessage, addMessage, navigation}) => {
   //     .finally(() => setLoading(false));
   // }, []);
 
-  // functions
+  // useEffect(() => {
 
-  // const renderMessageItem = ({item}) => (
-  //   <View style={styles.listItemView}>
-  //     <Text>
-  //       {item.title}, {item.releaseYear}
-  //     </Text>
-  //     <Icon
-  //       name="remove"
-  //       size={20}
-  //       color="firebrick"
-  //       onPress={() => this.props.delete(item.id)}
-  //       style={styles.iconView}
-  //     />
-  //   </View>
-  // );
+  // }, []);
 
-  // const addMessage = (text) => {
-  //   if (!text) {
-  //     Alert.alert(
-  //       'No item entered',
-  //       'Please enter an movie title to your list',
-  //       [
-  //         {
-  //           text: 'ok',
-  //           style: 'cancel',
-  //         },
-  //       ],
-  //       {cancelable: true},
-  //     );
-  //   } else {
-  //     // Breaking the Rules of Hooks?
-  //     setData((prevItems) => {
-  //       return [{id: uuidv4(), title: text}, ...prevItems];
-  //     });
-  //   }
-  // };
-
-  // const deleteMessage = (id) => {
-  //   console.log(id);
-  //   setData((prevItems) => {
-  //     return [...prevItems.filter((item) => item.id !== id)];
-  //   });
-  // };
-
-  /*
-   * AFTER ADDING REDUX
-   */
   return (
     <View style={styles.container}>
       <View style={[styles.column, styles.header, styles.one]}>

@@ -25,7 +25,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-const ReactWelcome: () => React$Node = ({navigation}) => {
+const HomeScreen: () => React$Node = ({navigation}) => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -116,4 +116,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ReactWelcome;
+export default HomeScreen;

@@ -11,12 +11,6 @@ var transport = {
   token: channelToken,
 };
 
-// var transport = {
-//   type: 'mqtt',
-//   apiKey: 'apiKey',
-//   secretKey: 'secretKey', // Secret Key is a secret shared between you and Beebotte.
-// };
-
 //Create a Stream connector
 const client = new bbt.Stream({transport: transport});
 
