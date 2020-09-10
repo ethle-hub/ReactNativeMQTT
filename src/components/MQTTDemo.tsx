@@ -1,6 +1,6 @@
 // src/components/MQTTDemoApp.tsx
 
-import React from 'react'; // , {useState, useEffect}
+import React, {useEffect} from 'react'; // , {useState, useEffect}
 
 import {
   View,
@@ -20,12 +20,22 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import AddMessage from './AddMessage';
 
 import {connect} from 'react-redux';
-import {deleteMessageAction, addMessageAction} from '../actions/message';
+import {
+  deleteMessageAction,
+  addMessageAction,
+  loadMessagesAction,
+} from '../actions/message';
 
 import {MQTTService} from '../services/MQTTService';
 
 // component
-const MQTTDemo = ({messages, deleteMessage, addMessage, navigation}) => {
+const MQTTDemo = ({
+  messages,
+  deleteMessage,
+  addMessage,
+  loadMessages,
+  navigation,
+}) => {
   const mqtt = new MQTTService('my-super-secret-auth-token');
   mqtt.channel = 'test';
   mqtt.booking = 'booking';
@@ -33,13 +43,14 @@ const MQTTDemo = ({messages, deleteMessage, addMessage, navigation}) => {
   // const [isLoading, setLoading] = useState(true);
   // const [data, setData] = useState([]);
 
-  // useEffect(() => {
-  //   fetch('https://reactnative.dev/movies.json')
-  //     .then((response) => response.json())
-  //     .then((json) => setData(json.movies)) // e.g. "movies": [{ "id": "1", "title": "Star Wars", "releaseYear": "1977" },]
-  //     .catch((error) => console.error(error))
-  //     .finally(() => setLoading(false));
-  // }, []);
+  useEffect(() => {
+    fetch('https://reactnative.dev/movies.json')
+      .then((response) => response.json())
+      //.then((json) => setData(json.movies)) // e.g. "movies": [{ "id": "1", "title": "Star Wars", "releaseYear": "1977" },]
+      .then((json) => messages = json.movies ))
+      .catch((error) => console.error(error))
+      .finally(() => {});
+  }, []);
 
   // useEffect(() => {
 
@@ -204,6 +215,7 @@ const mapDispatchToProps = (dispatch /*,, ownProps*/) => {
   return {
     deleteMessage: (msgId) => dispatch(deleteMessageAction(msgId)),
     addMessage: (msgText) => dispatch(addMessageAction(msgText)),
+    loadMessages: (messages) => dispatch(loadMessagesAction(messages)),
   };
 };
 

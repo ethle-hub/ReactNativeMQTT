@@ -1,15 +1,15 @@
-import {ADD_MESSAGE, DELETE_MESSAGE} from '../actions/types';
+import {ADD_MESSAGE, DELETE_MESSAGE, LOAD_MESSAGES} from '../actions/types';
 import {v4 as uuidv4} from 'uuid';
 import {Alert} from 'react-native';
 
 const initialState = {
-  messages: [
-    {id: '1', title: 'Star Wars', releaseYear: '1977'},
-    {id: '2', title: 'Back to the Future', releaseYear: '1985'},
-    {id: '3', title: 'The Matrix', releaseYear: '1999'},
-    {id: '4', title: 'Inception', releaseYear: '2010'},
-    {id: '5', title: 'Interstellar', releaseYear: '2014'},
-  ],
+  // messages: [
+  //   {id: '1', title: 'Star Wars', releaseYear: '1977'},
+  //   {id: '2', title: 'Back to the Future', releaseYear: '1985'},
+  //   {id: '3', title: 'The Matrix', releaseYear: '1999'},
+  //   {id: '4', title: 'Inception', releaseYear: '2010'},
+  //   {id: '5', title: 'Interstellar', releaseYear: '2014'},
+  // ],
 };
 
 const messageReducer = (state = initialState, action) => {
@@ -42,6 +42,10 @@ const messageReducer = (state = initialState, action) => {
       console.log(action);
       return {
         messages: state.messages.filter((item) => item.id !== action.msgId),
+      };
+    case LOAD_MESSAGES:
+      return {
+        messages: action.payload,
       };
     default: {
       return state;

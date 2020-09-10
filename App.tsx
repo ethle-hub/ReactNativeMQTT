@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import appStore from './src/AppStore';
 
 import HomeScreen from './src/containers/HomeScreen'; // default app when project was initialized
-import MQTTScreen from './src/containers/MQTTScreen';
+import MQTTScreen from './src/components/MQTTDemo'; //'./src/containers/MQTTScreen';
 //import MQTTDemo from './src/components/MQTTDemo';
 
 // function LogoTitle() {
