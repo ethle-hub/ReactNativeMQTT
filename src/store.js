@@ -7,7 +7,7 @@ import {createLogger} from 'redux-logger';
 import {persistStore, persistReducer} from 'redux-persist';
 
 // Imports: Redux actions to update the state
-import messageReducer from './reducers/MessageReducer';
+import messageReducer from './components/message/reducer';
 
 const rootReducer = combineReducers({
   messageReducer: messageReducer,
@@ -29,8 +29,8 @@ const persistConfig = {
 // Middleware: Redux Persist Persisted Reducer
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// Redux: Store where application state lives
-let store = createStore(persistedReducer, applyMiddleware(createLogger()));
+// Redux: `store` is created using a root reducer function (or persistedReducer in this case)
+let store = createStore(persistedReducer); //, applyMiddleware(createLogger()));
 
 // Middleware: Redux Persist Persister
 let persistor = persistStore(store);

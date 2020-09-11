@@ -16,7 +16,7 @@ import {store, persistor} from './src/store';
 
 // Imports: Screens
 import HomeScreen from './src/containers/HomeScreen'; // default app when project was initialized
-import MQTTScreen from './src/components/MQTTDemo'; //'./src/containers/MQTTScreen';
+import MQTTScreen from './src/components/message/MQTTDemo'; //'./src/containers/MQTTScreen';
 
 const Stack = createStackNavigator();
 
@@ -24,8 +24,11 @@ const Stack = createStackNavigator();
 
 // React Native: App
 const App: () => React$Node = () => {
-  // console.log('store.default.store()  asdad');
-  // console.log(store;
+  /*
+   * When the UI is first rendered, UI components access the current state of the Redux `store` e.g. import {store, persistor} from './src/store' ,
+   * and use that data to decide what to render. They also subscribe to any future store updates so they can know if the state has changed.
+   */
+
   return (
     // Redux: Global Store
     <Provider store={store}>

@@ -24,9 +24,9 @@ import {
   deleteMessageAction,
   addMessageAction,
   loadMessagesAction,
-} from '../actions/message';
+} from './actions';
 
-import {MQTTService} from '../services/MQTTService';
+import {MQTTService} from './../../services/MQTTService';
 
 // Screen: MQTTDemo
 const MQTTDemo = ({
@@ -213,7 +213,7 @@ const mapStateToProps = (state /*, ownProps?*/) => {
 };
 
 const mapDispatchToProps = (dispatch /*,, ownProps*/) => {
-  // return a object containing functions
+  // The app code will dispatche these actions to the Redux store,
   return {
     deleteMessage: (msgId) => dispatch(deleteMessageAction(msgId)),
     addMessage: (msgText) => dispatch(addMessageAction(msgText)),

@@ -1,4 +1,4 @@
-import {ADD_MESSAGE, DELETE_MESSAGE, LOAD_MESSAGES} from '../actions/types';
+import {ADD_MESSAGE, DELETE_MESSAGE, LOAD_MESSAGES} from './types';
 
 export const addMessageAction = (messageItem) => ({
   type: ADD_MESSAGE,

@@ -1,6 +1,11 @@
-import {ADD_MESSAGE, DELETE_MESSAGE, LOAD_MESSAGES} from '../actions/types';
+import {ADD_MESSAGE, DELETE_MESSAGE, LOAD_MESSAGES} from './types';
 import {v4 as uuidv4} from 'uuid';
 import {Alert} from 'react-native';
+
+/*
+ * The store runs the reducer function (e.g. messageReducer) again with the previous state and the current action, and saves the return value as the new state 
+ * Then the store notifies all parts of the UI that are subscribed that the store has been updated
+ */
 
 const initialState = {
   // messages: [
@@ -13,7 +18,7 @@ const initialState = {
 };
 
 const messageReducer = (state = initialState, action) => {
-  //console.log(`messageReducer => ${action.type}`);
+  console.log(`action.type => ${action.type}`);
   //console.log(state.messages);
   switch (action.type) {
     case ADD_MESSAGE:
