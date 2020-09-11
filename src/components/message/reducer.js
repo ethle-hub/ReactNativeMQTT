@@ -2,7 +2,7 @@ import {
   ADD_MESSAGE,
   DELETE_MESSAGE,
   SET_LOADING,
-  MESSAGES_LOAD_COMPLETE,
+  COMPLETE_LOAD_MESSAGE,
 } from './types';
 import {v4 as uuidv4} from 'uuid';
 import {Alert} from 'react-native';
@@ -49,35 +49,27 @@ const messageReducer = (state = initialState, action) => {
       } else {
         console.log(state);
         return {
-          ...state,
+          isLoading: false,
           messages: [{id: uuidv4(), title: action.msgText}, ...state.messages],
         };
       }
     case DELETE_MESSAGE:
       return {
-        ...state,
-        messages: state.messages.filter((item) => item.id !== action.msgId),
+        messages:
+          state.messages.filter((item) => item.id !== action.msgId) || [],
+        isLoading: false,
       };
     case SET_LOADING:
-      if (state.messages === undefined || state.messages.length === 0) {
-        console.log(`SET_LOADING => ${action.isLoading}`);
-        return {
-          isLoading: action.isLoading,
-          messages: [],
-        };
-      } else {
-        console.log(`SET_LOADING => ${action.isLoading}`);
-        return {
-          ...state,
-          isLoading: action.isLoading,
-          messages: state.messages || [],
-        };
-      }
-    case MESSAGES_LOAD_COMPLETE:
-      console.log(state);
+      return {
+        isLoading: action.isLoading,
+        messages: state.messages || [],
+      };
+    case COMPLETE_LOAD_MESSAGE:
+      console.log(action.payload);
       return {
         ...state,
-        messages: [action.payload, ...state.messages],
+        messages: state.messages || action.payload,
+        //isLoading: false,
       };
     default: {
       return state;
