@@ -41,7 +41,7 @@ react-native start --reset-cache
 ````
 
 
-## Fixed npm package versions
++ Fixed npm package versions
 
 By default npm installs packages using `^` which means any version in the same major range, you can switch this behaviour by using `--save-exact`
 
@@ -54,4 +54,13 @@ yarn add --exact react
 
 ```
 
+
++ error: Error: Unable to resolve module ....
+
+If you are sure the module exists, try these steps:
+
+ 1. Clear watchman watches: `watchman watch-del-all`
+ 2. Delete node_modules: `rm -rf node_modules and run yarn install`
+ 3. Reset Metro's cache: `yarn start --reset-cache` or `npm start --reset-cache` or `react-native start --reset-cache`
+ 4. Remove the cache: `rm -rf /tmp/metro-*`
 

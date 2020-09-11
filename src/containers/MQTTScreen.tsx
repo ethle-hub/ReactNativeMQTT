@@ -1,3 +1,4 @@
+// Imports: Dependencies
 import React from 'react';
 import {
   SafeAreaView,
@@ -11,6 +12,7 @@ import {
 
 import {Header, Colors} from 'react-native/Libraries/NewAppScreen';
 
+// Screen: MQTTScreen
 const MQTTScreen: () => React$Node = ({navigation}) => {
   return (
     <>

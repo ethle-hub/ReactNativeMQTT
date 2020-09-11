@@ -28,7 +28,7 @@ import {
 
 import {MQTTService} from '../services/MQTTService';
 
-// component
+// Screen: MQTTDemo
 const MQTTDemo = ({
   messages,
   deleteMessage,
@@ -43,14 +43,16 @@ const MQTTDemo = ({
   // const [isLoading, setLoading] = useState(true);
   // const [data, setData] = useState([]);
 
+  // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
+    // Update the component with data
     fetch('https://reactnative.dev/movies.json')
       .then((response) => response.json())
       //.then((json) => setData(json.movies)) // e.g. "movies": [{ "id": "1", "title": "Star Wars", "releaseYear": "1977" },]
-      .then((json) => messages = json.movies ))
+      .then((json) => loadMessages(json.movies))
       .catch((error) => console.error(error))
       .finally(() => {});
-  }, []);
+  });
 
   // useEffect(() => {
 

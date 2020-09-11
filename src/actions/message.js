@@ -11,12 +11,8 @@ export const deleteMessageAction = (messageId) => ({
 });
 
 export const loadMessagesAction = (messages) => ({
-  //return a action type and a loading state indicating it is getting data.
-  // available from redux
-
+  //return a action `type` and a `loading` state indicating it is getting data.
   type: LOAD_MESSAGES,
   payload: messages,
   loading: false,
 });
-
-// => {}
