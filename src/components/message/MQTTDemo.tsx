@@ -1,6 +1,6 @@
 // src/components/MQTTDemoApp.tsx
 
-import React, {useEffect} from 'react'; // , {useState, useEffect}
+import React, {useState, useEffect} from 'react';
 
 import {
   View,
@@ -8,7 +8,7 @@ import {
   FlatList,
   Text,
   Button,
-  //ActivityIndicator,
+  ActivityIndicator,
   //Alert,
   //ScrollView,
   //SafeAreaView,
@@ -23,40 +23,53 @@ import {connect} from 'react-redux';
 import {
   deleteMessageAction,
   addMessageAction,
-  loadMessagesAction,
+  setLoadingAction,
+  setLoadingCompleteAction,
 } from './actions';
 
-import {MQTTService} from './../../services/MQTTService';
+//import {MQTTService} from './../../services/MQTTService';
 
 // Screen: MQTTDemo
 const MQTTDemo = ({
   messages,
+  //isLoading,
   deleteMessage,
   addMessage,
-  loadMessages,
+  setLoading,
+  onLoadingComplete,
   navigation,
 }) => {
-  const mqtt = new MQTTService('my-super-secret-auth-token');
-  mqtt.channel = 'test';
-  mqtt.booking = 'booking';
+  // const mqtt = new MQTTService('my-super-secret-auth-token');
+  // mqtt.channel = 'test';
+  // mqtt.booking = 'booking';
 
-  // const [isLoading, setLoading] = useState(true);
-  // const [data, setData] = useState([]);
+  // const getMoviesFromApiAsync = async () => {
+  //   try {
+  //     let response = await fetch('https://reactnative.dev/movies.json');
+  //     let json = await response.json();
+  //     return json.movies;
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+  if (messages) {
+    console.log(`total messages: ${messages.length}`);
+  }
 
-  // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
-    // Update the component with data
+    console.log('useEffect() runs every time UI is rendered');
+    setLoading(true);
     fetch('https://reactnative.dev/movies.json')
       .then((response) => response.json())
-      //.then((json) => setData(json.movies)) // e.g. "movies": [{ "id": "1", "title": "Star Wars", "releaseYear": "1977" },]
-      .then((json) => loadMessages(json.movies))
+      .then((json) => onLoadingComplete(json.movies))
       .catch((error) => console.error(error))
-      .finally(() => {});
-  });
+      .finally(() => setLoading(false));
 
-  // useEffect(() => {
-
-  // }, []);
+    return () => {
+      setLoading(false);
+      console.log('useEffect() clean up');
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -209,16 +222,19 @@ const mapStateToProps = (state /*, ownProps?*/) => {
   // return a state object
   return {
     messages: state.messageReducer.messages,
+    //isLoading: state.messageReducer.isLoading,
   };
 };
 
-const mapDispatchToProps = (dispatch /*,, ownProps*/) => {
-  // The app code will dispatche these actions to the Redux store,
+// The app code will dispatch these actions to the Redux store,
+const mapDispatchToProps = (dispatch /*, ownProps*/) => {
   return {
     deleteMessage: (msgId) => dispatch(deleteMessageAction(msgId)),
     addMessage: (msgText) => dispatch(addMessageAction(msgText)),
-    loadMessages: (messages) => dispatch(loadMessagesAction(messages)),
+    setLoading: (isLoading) => dispatch(setLoadingAction(isLoading)),
+    onLoadingComplete: (messages) =>
+      dispatch(setLoadingCompleteAction(messages)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MQTTDemo);
+export default connect(mapStateToProps, mapDispatchToProps)(MQTTDemo); // injects state and dispatch actions

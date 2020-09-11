@@ -1,14 +1,24 @@
-import {ADD_MESSAGE, DELETE_MESSAGE, LOAD_MESSAGES} from './types';
+import {
+  ADD_MESSAGE,
+  DELETE_MESSAGE,
+  SET_LOADING,
+  MESSAGES_LOAD_COMPLETE,
+} from './types';
 import {v4 as uuidv4} from 'uuid';
 import {Alert} from 'react-native';
 
 /*
- * The store runs the reducer function (e.g. messageReducer) again with the previous state and the current action, and saves the return value as the new state 
+ * Actions describe the fact that something happened, but don’t specify how the application’s state changes in response. This is the job of reducers.
+ */
+
+/*
+ * The store runs the reducer function (e.g. messageReducer) again with the previous state and the current action, and saves the return value as the new state
  * Then the store notifies all parts of the UI that are subscribed that the store has been updated
  */
 
 const initialState = {
-  // messages: [
+  //isLoading: false,
+  messages: [],
   //   {id: '1', title: 'Star Wars', releaseYear: '1977'},
   //   {id: '2', title: 'Back to the Future', releaseYear: '1985'},
   //   {id: '3', title: 'The Matrix', releaseYear: '1999'},
@@ -22,7 +32,6 @@ const messageReducer = (state = initialState, action) => {
   //console.log(state.messages);
   switch (action.type) {
     case ADD_MESSAGE:
-      console.log(`ADD_MESSAGE => ${action.msgText}`);
       if (!action.msgText) {
         // todo: move this Alert into UI component
         Alert.alert(
@@ -38,19 +47,37 @@ const messageReducer = (state = initialState, action) => {
         );
         return state;
       } else {
+        console.log(state);
         return {
+          ...state,
           messages: [{id: uuidv4(), title: action.msgText}, ...state.messages],
         };
       }
     case DELETE_MESSAGE:
-      console.log(`DELETE_MESSAGE => ${action.msgId}`);
-      console.log(action);
       return {
+        ...state,
         messages: state.messages.filter((item) => item.id !== action.msgId),
       };
-    case LOAD_MESSAGES:
+    case SET_LOADING:
+      if (state.messages === undefined || state.messages.length === 0) {
+        console.log(`SET_LOADING => ${action.isLoading}`);
+        return {
+          isLoading: action.isLoading,
+          messages: [],
+        };
+      } else {
+        console.log(`SET_LOADING => ${action.isLoading}`);
+        return {
+          ...state,
+          isLoading: action.isLoading,
+          messages: state.messages || [],
+        };
+      }
+    case MESSAGES_LOAD_COMPLETE:
+      console.log(state);
       return {
-        messages: action.payload,
+        ...state,
+        messages: [action.payload, ...state.messages],
       };
     default: {
       return state;
