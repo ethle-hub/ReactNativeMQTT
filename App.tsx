@@ -16,7 +16,8 @@ import {store, persistor} from './src/store';
 
 // Imports: Screens
 import HomeScreen from './src/containers/HomeScreen'; // default app when project was initialized
-import MQTTScreen from './src/components/message/MQTTDemo'; //'./src/containers/MQTTScreen';
+//import MQTTScreen from './src/components/message/MQTTDemo'; 
+import MQTTScreen from './src/containers/MQTTScreen';
 
 const Stack = createStackNavigator();
 

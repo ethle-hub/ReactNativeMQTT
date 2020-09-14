@@ -51,9 +51,9 @@ const MQTTDemo = ({
     //   await getMessages();
     // })();
        
-    // return () => {     
-    //   console.log('useEffect() clean up');
-    // };
+    return () => {     
+      console.log('useEffect() clean up');
+    };
   }, []);
 
   return (
