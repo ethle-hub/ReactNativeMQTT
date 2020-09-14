@@ -1,7 +1,7 @@
 import {
   ADD_MESSAGE,
   DELETE_MESSAGE,
-  COMPLETE_LOAD_MESSAGE,
+  SET_DATA,
   SET_LOADING,
 } from './types';
 
@@ -24,8 +24,8 @@ export const setLoadingAction = (isLoading) => ({
   isLoading: isLoading,
 });
 
-export const setLoadingCompleteAction = (messages) => ({
+export const setDataAction = (messages) => ({
   //return a action `type` and a `loading` state indicating it is getting data.
-  type: COMPLETE_LOAD_MESSAGE,
+  type: SET_DATA,
   payload: messages,
 });

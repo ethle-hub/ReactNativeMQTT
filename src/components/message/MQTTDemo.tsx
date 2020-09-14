@@ -24,7 +24,7 @@ import {
   deleteMessageAction,
   addMessageAction,
   setLoadingAction,
-  setLoadingCompleteAction,
+  setDataAction,
 } from './actions';
 
 //import {MQTTService} from './../../services/MQTTService';
@@ -36,7 +36,7 @@ const MQTTDemo = ({
   deleteMessage,
   addMessage,
   setLoading,
-  onLoadingComplete,
+  setData,
   navigation,
 }) => {
   // const mqtt = new MQTTService('my-super-secret-auth-token');
@@ -55,16 +55,22 @@ const MQTTDemo = ({
   if (messages) {
     console.log(`total messages: ${messages.length}`);
   }
+  else
+  console.log(`else ff if (messages) =>${messages.length}`);
 
   useEffect(() => {
     console.log('useEffect() runs every time UI is rendered');
-    setLoading(true);
-    fetch('https://reactnative.dev/movies.json')
-      .then((response) => response.json())
-      .then((json) => onLoadingComplete(json.movies))
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
 
+    // load data if not already
+    if(messages === undefined || messages.length === 0)
+    {
+      setLoading(true);
+      fetch('https://reactnative.dev/movies.json')
+        .then((response) => response.json())
+        .then((json) => setData(json.movies))
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+    }
     return () => {
       setLoading(false);
       console.log('useEffect() clean up');
@@ -232,8 +238,8 @@ const mapDispatchToProps = (dispatch /*, ownProps*/) => {
     deleteMessage: (msgId) => dispatch(deleteMessageAction(msgId)),
     addMessage: (msgText) => dispatch(addMessageAction(msgText)),
     setLoading: (isLoading) => dispatch(setLoadingAction(isLoading)),
-    onLoadingComplete: (messages) =>
-      dispatch(setLoadingCompleteAction(messages)),
+    setData: (messages) =>
+      dispatch(setDataAction(messages)),
   };
 };
 

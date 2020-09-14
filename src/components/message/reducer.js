@@ -2,7 +2,7 @@ import {
   ADD_MESSAGE,
   DELETE_MESSAGE,
   SET_LOADING,
-  COMPLETE_LOAD_MESSAGE,
+  SET_DATA,
 } from './types';
 import {v4 as uuidv4} from 'uuid';
 import {Alert} from 'react-native';
@@ -64,11 +64,12 @@ const messageReducer = (state = initialState, action) => {
         isLoading: action.isLoading,
         messages: state.messages || [],
       };
-    case COMPLETE_LOAD_MESSAGE:
-      console.log(action.payload);
+    case SET_DATA:
+      console.log('showing state.messages');
+      console.log(state.messages);
       return {
         ...state,
-        messages: state.messages || action.payload,
+        messages: action.payload || [],
         //isLoading: false,
       };
     default: {
