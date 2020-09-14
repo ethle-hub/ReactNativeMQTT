@@ -1,99 +1,97 @@
-/* eslint-disable no-shadow */
 // src/components/MQTTDemoApp.tsx
 
 import React, {useState, useEffect} from 'react';
+
 import {
   View,
   StyleSheet,
   FlatList,
   Text,
-  //ActivityIndicator,
+  Button,
+  ActivityIndicator,
   //Alert,
   //ScrollView,
   //SafeAreaView,
   //StatusBar,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-//import {v4 as uuidv4} from 'uuid';
 
-import AppHeader from './AppHeader';
+//import AppHeader from './AppHeader';
 import AddMessage from './AddMessage';
 
 import {connect} from 'react-redux';
-import {deleteMessageAction, addMessageAction} from '../actions/message';
+import {
+  deleteMessageAction,
+  addMessageAction,
+  setLoadingAction,
+  setLoadingCompleteAction,
+} from './actions';
 
-// component
-const MQTTDemo = ({messages, deleteMessage, addMessage}) => {
-  /*
-   * BEFORE USING REDUX STORE
-   */
+//import {MQTTService} from './../../services/MQTTService';
 
-  // const [isLoading, setLoading] = useState(true);
-  // const [data, setData] = useState([]);
+// Screen: MQTTDemo
+const MQTTDemo = ({
+  messages,
+  //isLoading,
+  deleteMessage,
+  addMessage,
+  setLoading,
+  onLoadingComplete,
+  navigation,
+}) => {
+  // const mqtt = new MQTTService('my-super-secret-auth-token');
+  // mqtt.channel = 'test';
+  // mqtt.booking = 'booking';
 
-  // useEffect(() => {
-  //   fetch('https://reactnative.dev/movies.json')
-  //     .then((response) => response.json())
-  //     .then((json) => setData(json.movies)) // e.g. "movies": [{ "id": "1", "title": "Star Wars", "releaseYear": "1977" },]
-  //     .catch((error) => console.error(error))
-  //     .finally(() => setLoading(false));
-  // }, []);
-
-  // functions
-
-  // const renderMessageItem = ({item}) => (
-  //   <View style={styles.listItemView}>
-  //     <Text>
-  //       {item.title}, {item.releaseYear}
-  //     </Text>
-  //     <Icon
-  //       name="remove"
-  //       size={20}
-  //       color="firebrick"
-  //       onPress={() => this.props.delete(item.id)}
-  //       style={styles.iconView}
-  //     />
-  //   </View>
-  // );
-
-  // const addMessage = (text) => {
-  //   if (!text) {
-  //     Alert.alert(
-  //       'No item entered',
-  //       'Please enter an movie title to your list',
-  //       [
-  //         {
-  //           text: 'ok',
-  //           style: 'cancel',
-  //         },
-  //       ],
-  //       {cancelable: true},
-  //     );
-  //   } else {
-  //     // Breaking the Rules of Hooks?
-  //     setData((prevItems) => {
-  //       return [{id: uuidv4(), title: text}, ...prevItems];
-  //     });
+  // const getMoviesFromApiAsync = async () => {
+  //   try {
+  //     let response = await fetch('https://reactnative.dev/movies.json');
+  //     let json = await response.json();
+  //     return json.movies;
+  //   } catch (error) {
+  //     console.error(error);
   //   }
   // };
+  if (messages) {
+    console.log(`total messages: ${messages.length}`);
+  }
 
-  // const deleteMessage = (id) => {
-  //   console.log(id);
-  //   setData((prevItems) => {
-  //     return [...prevItems.filter((item) => item.id !== id)];
-  //   });
-  // };
+  useEffect(() => {
+    console.log('useEffect() runs every time UI is rendered');
+    setLoading(true);
+    fetch('https://reactnative.dev/movies.json')
+      .then((response) => response.json())
+      .then((json) => onLoadingComplete(json.movies))
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
 
-  /*
-   * AFTER ADDING REDUX
-   */
+    return () => {
+      setLoading(false);
+      console.log('useEffect() clean up');
+    };
+  }, []);
+
   return (
     <View style={styles.container}>
-      <View style={[styles.row, styles.header, styles.one]}>
-        <AppHeader
+      <View style={[styles.column, styles.header, styles.one]}>
+        {/* <AppHeader
           style={[styles.row, styles.header, styles.one]}
           title={'React Native MQTT'}
           iconUri={'https://reactnative.dev/docs/assets/p_cat1.png'}
+        /> */}
+        <Text>Details Screen</Text>
+        <Button
+          title="Go to `this screen... again"
+          onPress={() => navigation.push('MQTTDemo')}
+        />
+        <Button
+          title="Go to Home"
+          onPress={() => navigation.navigate('Home')}
+        />
+        <Button title="Go back" onPress={() => navigation.goBack()} />
+        <Button
+          title="Go to Top screen"
+          onPress={() => navigation.popToTop()}
         />
       </View>
       <View style={[styles.row, styles.main, styles.four]}>
@@ -138,6 +136,10 @@ const styles = StyleSheet.create({
   // basics layout style
   container: {
     flex: 1,
+  },
+  column: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   row: {
@@ -220,16 +222,19 @@ const mapStateToProps = (state /*, ownProps?*/) => {
   // return a state object
   return {
     messages: state.messageReducer.messages,
+    //isLoading: state.messageReducer.isLoading,
   };
 };
 
-const mapDispatchToProps = (dispatch /*,, ownProps*/) => {
-  // return a object containing functions
+// The app code will dispatch these actions to the Redux store,
+const mapDispatchToProps = (dispatch /*, ownProps*/) => {
   return {
     deleteMessage: (msgId) => dispatch(deleteMessageAction(msgId)),
     addMessage: (msgText) => dispatch(addMessageAction(msgText)),
+    setLoading: (isLoading) => dispatch(setLoadingAction(isLoading)),
+    onLoadingComplete: (messages) =>
+      dispatch(setLoadingCompleteAction(messages)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MQTTDemo);
-//export default MQTTDemo;
+export default connect(mapStateToProps, mapDispatchToProps)(MQTTDemo); // injects state and dispatch actions
