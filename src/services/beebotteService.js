@@ -5,6 +5,7 @@ const channelName = 'test';
 const channelToken = 'token_fISEmz2Vadllxt8r'; // need to securely
 const resourceName = 'vehicle';
 
+// OPTIONS
 //Replace API and secret keys by those of your account
 var transport = {
   type: 'mqtt',
@@ -21,9 +22,21 @@ client.on('connected', function () {
     console.log('client.subscribe..');
     console.log(message);
   });
-  // //On successful subscription
+  //On successful subscription
   // .on('subscribed', function (sub) {
   //   console.log('client.publish..');
   //   client.publish(channelName, resourceName, 'Hello World');
   // });
 });
+
+// todo 1) add these handlers, 2) export default
+
+// OnSubscriptionStarted => channelName/resourceName
+// OnSubscriptionSuccess
+// OnSubscriptionError
+// OnConnectionStarted => transport => type + channelToken
+// OnConnectionSuccess
+// OnConnectionError
+// OnClientClosed
+
+export default client; 
