@@ -21,54 +21,39 @@ import AddMessage from './AddMessage';
 
 import {connect} from 'react-redux';
 import {
-  deleteMessageAction,
-  addMessageAction,
-  setLoadingAction,
-  setLoadingCompleteAction,
+  onMessageAdded,
+  onMessageDeleted,
+  loadMessages,
 } from './actions';
 
-//import {MQTTService} from './../../services/MQTTService';
 
 // Screen: MQTTDemo
 const MQTTDemo = ({
   messages,
-  //isLoading,
-  deleteMessage,
   addMessage,
-  setLoading,
-  onLoadingComplete,
-  navigation,
+  deleteMessage,
+  getMessages,
+  navigation,  
 }) => {
-  // const mqtt = new MQTTService('my-super-secret-auth-token');
-  // mqtt.channel = 'test';
-  // mqtt.booking = 'booking';
-
-  // const getMoviesFromApiAsync = async () => {
-  //   try {
-  //     let response = await fetch('https://reactnative.dev/movies.json');
-  //     let json = await response.json();
-  //     return json.movies;
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-  if (messages) {
-    console.log(`total messages: ${messages.length}`);
-  }
-
+  
   useEffect(() => {
-    console.log('useEffect() runs every time UI is rendered');
-    setLoading(true);
-    fetch('https://reactnative.dev/movies.json')
-      .then((response) => response.json())
-      .then((json) => onLoadingComplete(json.movies))
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
+    
+    // Notice: getMessages() is a function that return an asynce function
+    // It must be used together with redux-thunk middleware
 
-    return () => {
-      setLoading(false);
-      console.log('useEffect() clean up');
-    };
+    // option 1) it can be called directly like so
+    getMessages();
+    
+    // or alternatively, call asynchronous code in useEffect 
+    // using an IIFE (https://medium.com/javascript-in-plain-english/https-medium-com-javascript-in-plain-english-stop-feeling-iffy-about-using-an-iife-7b0292aba174)
+    //    
+    // (async function myFunc() {
+    //   await getMessages();
+    // })();
+       
+    // return () => {     
+    //   console.log('useEffect() clean up');
+    // };
   }, []);
 
   return (
@@ -229,11 +214,9 @@ const mapStateToProps = (state /*, ownProps?*/) => {
 // The app code will dispatch these actions to the Redux store,
 const mapDispatchToProps = (dispatch /*, ownProps*/) => {
   return {
-    deleteMessage: (msgId) => dispatch(deleteMessageAction(msgId)),
-    addMessage: (msgText) => dispatch(addMessageAction(msgText)),
-    setLoading: (isLoading) => dispatch(setLoadingAction(isLoading)),
-    onLoadingComplete: (messages) =>
-      dispatch(setLoadingCompleteAction(messages)),
+    deleteMessage: (msgId: string) => dispatch(onMessageDeleted(msgId)),
+    addMessage: (msgText: string) => dispatch(onMessageAdded(msgText)),
+    getMessages: () => dispatch(loadMessages()),
   };
 };
 
