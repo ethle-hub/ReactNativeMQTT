@@ -20,12 +20,7 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import AddMessage from './AddMessage';
 
 import {connect} from 'react-redux';
-import {
-  onMessageAdded,
-  onMessageDeleted,
-  loadMessages,
-} from './actions';
-
+import {onMessageAdded, onMessageDeleted, loadMessages} from './actions';
 
 // Screen: MQTTDemo
 const MQTTDemo = ({
@@ -33,25 +28,23 @@ const MQTTDemo = ({
   addMessage,
   deleteMessage,
   getMessages,
-  navigation,  
+  navigation,
 }) => {
-  
   useEffect(() => {
-    
     // Notice: getMessages() is a function that return an asynce function
     // It must be used together with redux-thunk middleware
 
     // option 1) it can be called directly like so
     getMessages();
-    
-    // or alternatively, call asynchronous code in useEffect 
+
+    // or alternatively, call asynchronous code in useEffect
     // using an IIFE (https://medium.com/javascript-in-plain-english/https-medium-com-javascript-in-plain-english-stop-feeling-iffy-about-using-an-iife-7b0292aba174)
-    //    
+    //
     // (async function myFunc() {
     //   await getMessages();
     // })();
-       
-    return () => {     
+
+    return () => {
       console.log('useEffect() clean up');
     };
   }, []);

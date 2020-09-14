@@ -3,7 +3,7 @@ import {
   LOAD_MESSAGE_SUCCESS,
   LOAD_MESSAGE_ERROR,
   ADD_MESSAGE,
-  DELETE_MESSAGE,  
+  DELETE_MESSAGE,
 } from './types';
 import {v4 as uuidv4} from 'uuid';
 import {Alert} from 'react-native';
@@ -56,21 +56,21 @@ const messageReducer = (state = INITIAL_STATE, action) => {
         isLoading: false,
       };
     case LOAD_MESSAGE_START:
-        return {
-          ...state,
-          isLoading: true
-        };
+      return {
+        ...state,
+        isLoading: true,
+      };
     case LOAD_MESSAGE_SUCCESS:
       return {
         ...state,
         isLoading: false,
-        message: action.payload || []
+        message: action.payload || [],
       };
     case LOAD_MESSAGE_ERROR:
       return {
         ...state,
         isLoading: false,
-        errorMessage: action.payload
+        errorMessage: action.payload,
       };
     // case SET_LOADING:
     //   return {

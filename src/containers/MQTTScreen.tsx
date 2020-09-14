@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 // Imports: Dependencies
 import React from 'react';
 import {
@@ -6,12 +7,12 @@ import {
   ScrollView,
   View,
   Text,
-  StatusBar, 
+  StatusBar,
   FlatList,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 
-import { Header, Colors } from 'react-native/Libraries/NewAppScreen';
+import {Header, Colors} from 'react-native/Libraries/NewAppScreen';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {connect} from 'react-redux';
 
@@ -24,17 +25,18 @@ import {
 } from '../components/message/types';
 
 // Screen: MQTTScreen
-const MQTTScreen: () => React$Node = ({messages, isLoading, deleteMessage }) => {
-
+const MQTTScreen: () => React$Node = ({messages, isLoading, deleteMessage}) => {
   //const action = type => store.dispatch({type})
 
   const renderHeader = () => {
-    return <>
-    <Text style={styles.sectionTitle}>Beebotte</Text>
-    <Text style={styles.sectionDescription}>
-      .: Receive messages in real time...
-    </Text>
-  </>
+    return (
+      <>
+        <Text style={styles.sectionTitle}>Beebotte</Text>
+        <Text style={styles.sectionDescription}>
+          .: Receive messages in real time...
+        </Text>
+      </>
+    );
   };
 
   const renderSeparator = () => {
@@ -42,25 +44,26 @@ const MQTTScreen: () => React$Node = ({messages, isLoading, deleteMessage }) => 
       <View
         style={{
           height: 1,
-          width: "86%",
-          backgroundColor: "#CED0CE",
-          marginLeft: "14%"
+          width: '86%',
+          backgroundColor: '#CED0CE',
+          marginLeft: '14%',
         }}
       />
     );
   };
 
   const renderFooter = () => {
-    if (!isLoading) return null;
+    if (!isLoading) {
+      return null;
+    }
 
     return (
       <View
         style={{
           paddingVertical: 20,
           borderTopWidth: 1,
-          borderColor: "#CED0CE"
-        }}
-      >
+          borderColor: '#CED0CE',
+        }}>
         <ActivityIndicator animating size="large" />
       </View>
     );
@@ -70,7 +73,7 @@ const MQTTScreen: () => React$Node = ({messages, isLoading, deleteMessage }) => 
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
-        {/* Commineted out ScrollView to  avoid error:       
+        {/* Commineted out ScrollView to  avoid error:
       VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead. */}
         {/* <ScrollView
           contentInsetAdjustmentBehavior="automatic"
@@ -82,29 +85,29 @@ const MQTTScreen: () => React$Node = ({messages, isLoading, deleteMessage }) => 
           ListFooterComponent={renderFooter}
           data={messages}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <View style={styles.body}>
               <View style={styles.sectionContainer}>
                 <Text style={styles.sectionTitle}>{item.title}</Text>
-                  <Text style={styles.sectionDescription}>
-                    {item.releaseYear}
-                  </Text>
-                  <Icon
-                    name="remove"
-                    size={20}
-                    color="firebrick"
-                    //onPress={() => { }}
-                    onPress={() => {
-                      console.log(item);
-                      console.log(`item.id = ${item.id}`);
-                      deleteMessage(item.id);
-                    }}
-                    style={styles.iconView}
-                  />
-                </View>
+                <Text style={styles.sectionDescription}>
+                  {item.releaseYear}
+                </Text>
+                <Icon
+                  name="remove"
+                  size={20}
+                  color="firebrick"
+                  //onPress={() => { }}
+                  onPress={() => {
+                    console.log(item);
+                    console.log(`item.id = ${item.id}`);
+                    deleteMessage(item.id);
+                  }}
+                  style={styles.iconView}
+                />
               </View>
-            )}
-          />          
+            </View>
+          )}
+        />
         {/* </ScrollView> */}
       </SafeAreaView>
     </>
@@ -162,17 +165,20 @@ const mapStateToProps = (state /*, ownProps?*/) => {
 // Map Dispatch To Props (Dispatch Actions To Reducers. Reducers Then Modify The Data And Assign It To Your Props)
 const mapDispatchToProps = (dispatch /*, ownProps*/) => {
   return {
-    deleteMessage: (msgId: string) => dispatch({
-      type: DELETE_MESSAGE,
-      payload: msgId,
-    }),
-    addMessage: (msgText: string) => dispatch({
-      type: ADD_MESSAGE,
-      payload: msgText,
-    }),
-    getMessages: () => dispatch({
-      type: LOAD_MESSAGE_START      
-    })
+    deleteMessage: (msgId: string) =>
+      dispatch({
+        type: DELETE_MESSAGE,
+        payload: msgId,
+      }),
+    addMessage: (msgText: string) =>
+      dispatch({
+        type: ADD_MESSAGE,
+        payload: msgText,
+      }),
+    getMessages: () =>
+      dispatch({
+        type: LOAD_MESSAGE_START,
+      }),
   };
 };
 
