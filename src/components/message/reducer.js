@@ -1,8 +1,9 @@
 import {
+  LOAD_MESSAGE_START,
+  LOAD_MESSAGE_SUCCESS,
+  LOAD_MESSAGE_ERROR,
   ADD_MESSAGE,
-  DELETE_MESSAGE,
-  SET_LOADING,
-  SET_DATA,
+  DELETE_MESSAGE,  
 } from './types';
 import {v4 as uuidv4} from 'uuid';
 import {Alert} from 'react-native';
@@ -16,18 +17,13 @@ import {Alert} from 'react-native';
  * Then the store notifies all parts of the UI that are subscribed that the store has been updated
  */
 
-const initialState = {
-  //isLoading: false,
+const INITIAL_STATE = {
+  isLoading: false,
+  errorMessage: undefined,
   messages: [],
-  //   {id: '1', title: 'Star Wars', releaseYear: '1977'},
-  //   {id: '2', title: 'Back to the Future', releaseYear: '1985'},
-  //   {id: '3', title: 'The Matrix', releaseYear: '1999'},
-  //   {id: '4', title: 'Inception', releaseYear: '2010'},
-  //   {id: '5', title: 'Interstellar', releaseYear: '2014'},
-  // ],
 };
 
-const messageReducer = (state = initialState, action) => {
+const messageReducer = (state = INITIAL_STATE, action) => {
   console.log(`action.type => ${action.type}`);
   //console.log(state.messages);
   switch (action.type) {
@@ -59,19 +55,36 @@ const messageReducer = (state = initialState, action) => {
           state.messages.filter((item) => item.id !== action.msgId) || [],
         isLoading: false,
       };
-    case SET_LOADING:
-      return {
-        isLoading: action.isLoading,
-        messages: state.messages || [],
-      };
-    case SET_DATA:
-      console.log('showing state.messages');
-      console.log(state.messages);
+    case LOAD_MESSAGE_START:
+        return {
+          ...state,
+          isLoading: true
+        };
+    case LOAD_MESSAGE_SUCCESS:
       return {
         ...state,
-        messages: action.payload || [],
-        //isLoading: false,
+        isLoading: false,
+        message: action.payload || []
       };
+    case LOAD_MESSAGE_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+        errorMessage: action.payload
+      };
+    // case SET_LOADING:
+    //   return {
+    //     isLoading: action.isLoading,
+    //     messages: state.messages || [],
+    //   };
+    // case SET_DATA:
+    //   console.log('showing state.messages');
+    //   console.log(state.messages);
+    //   return {
+    //     ...state,
+    //     messages: action.payload || [],
+    //     //isLoading: false,
+    //   };
     default: {
       return state;
     }

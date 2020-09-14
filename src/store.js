@@ -3,6 +3,9 @@ import {createStore, combineReducers, applyMiddleware} from 'redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {createLogger} from 'redux-logger';
 
+// Imports: thunk for doing asynchronous operations in redux
+import thunk from 'redux-thunk';
+
 // see https://www.npmjs.com/package/redux-persist
 import {persistStore, persistReducer} from 'redux-persist';
 
@@ -30,7 +33,7 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 // Redux: `store` is created using a root reducer function (or persistedReducer in this case)
-let store = createStore(persistedReducer); //, applyMiddleware(createLogger()));
+let store = createStore(persistedReducer, applyMiddleware(thunk)); // applyMiddleware(createLogger()));
 
 // Middleware: Redux Persist Persister
 let persistor = persistStore(store);
