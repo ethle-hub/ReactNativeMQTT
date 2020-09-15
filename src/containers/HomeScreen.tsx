@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -29,45 +29,46 @@ import {
 //   connectBeebotte,
 //   disconnectBeebotte,
 // } from '../services/beebotteStreamConnector';
+const bbt = require('../services/beebotte');
 
 /*
  * Stream Connector - MQTT transport
  */
 
-// const channelName = 'test';
-// const resourceName = 'vehicle';
-// const channelToken = 'token_fISEmz2Vadllxt8r'; // need to securely
+const channelName = 'test';
+const resourceName = 'vehicle';
+const channelToken = 'token_fISEmz2Vadllxt8r'; // need to securely
 
-// // OPTIONS
-// //Replace API and secret keys by those of your account
-// var transport = {
-//   type: 'mqtt',
-//   token: channelToken,
-// };
+// OPTIONS
+//Replace API and secret keys by those of your account
+var transport = {
+  type: 'mqtt',
+  token: channelToken,
+};
 
-// // Create a Stream connector
-// const client = new bbt.Stream({transport: transport});
+// Create a Stream connector
+const client = new bbt.Stream({ transport: transport });
 
-const HomeScreen: () => React$Node = ({navigation}) => {
+const HomeScreen: () => React$Node = ({ navigation }) => {
   useEffect(() => {
     // connectBeebotte('test', 'vehicle', (message) => {
     //   console.log(`I received: ${message}`);
     // });
 
-    // client.on('connected', function () {
-    //   console.log('connect...');
-    //   //subscribe to a channel/resource
-    //   client
-    //     .subscribe(channelName, resourceName, function (message) {
-    //       console.log('client.subscribe..');
-    //       console.log(message);
-    //     })
-    //     //On successful subscription
-    //     .on('subscribed', function (sub) {
-    //       console.log('client.publish..');
-    //       client.publish(channelName, resourceName, 'Hello World');
-    //     });
-    // });
+    client.on('connected', function () {
+      console.log('connect...');
+      //subscribe to a channel/resource
+      client
+        .subscribe(channelName, resourceName, function (message) {
+          console.log('client.subscribe..');
+          console.log(message);
+        })
+        //On successful subscription
+        .on('subscribed', function (sub) {
+          console.log('client.publish..');
+          client.publish(channelName, resourceName, 'Hello World');
+        });
+    });
 
     return () => {
       console.log('useEffect() clean up');

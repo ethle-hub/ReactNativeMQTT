@@ -5,16 +5,18 @@
 //Include the Beebotte SDK for nodejs
 const bbt = require('beebotte');
 
-const channelName = 'test';
-const resourceName = 'vehicle';
-const channelToken = 'token_fISEmz2Vadllxt8r'; // need to securely
+module.exports = bbt;
 
-// OPTIONS
-//Replace API and secret keys by those of your account
-var transport = {
-  type: 'mqtt',
-  token: channelToken,
-};
+// const channelName = 'test';
+// const resourceName = 'vehicle';
+// const channelToken = 'token_fISEmz2Vadllxt8r'; // need to securely
 
-// Create a Stream connector
-const client = new bbt.Stream({transport: transport});
+// // OPTIONS
+// //Replace API and secret keys by those of your account
+// var transport = {
+//   type: 'mqtt',
+//   token: channelToken,
+// };
+
+// // Create a Stream connector
+// const client = new bbt.Stream({transport: transport});
