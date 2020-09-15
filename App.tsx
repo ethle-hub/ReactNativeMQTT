@@ -16,8 +16,8 @@ import {store, persistor} from './src/store';
 
 // Imports: Screens
 import HomeScreen from './src/containers/HomeScreen'; // default app when project was initialized
-//import MQTTScreen from './src/components/message/MQTTDemo'; 
-import MQTTScreen from './src/containers/MQTTScreen';
+import ThunkScreen from './src/containers/ThunkScreen';
+import SagaScreen from './src/containers/SagaScreen';
 
 const Stack = createStackNavigator();
 
@@ -37,7 +37,7 @@ const App: () => React$Node = () => {
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen
-              name="Home"
+              name="HomeScreen"
               component={HomeScreen}
               options={({navigation}) => ({
                 title: 'React Native Welcome',
@@ -59,8 +59,8 @@ const App: () => React$Node = () => {
               })}
             />
             <Stack.Screen
-              name="MQTTDemo"
-              component={MQTTScreen}
+              name="SagaScreen"
+              component={SagaScreen}
               options={{
                 // headerStyle: {
                 //   backgroundColor: '#f4511e',
@@ -69,7 +69,7 @@ const App: () => React$Node = () => {
                 // headerTitleStyle: {
                 //   fontWeight: 'bold',
                 // },
-                title: 'MQTT Demo',
+                title: 'SagaScreen',
                 // headerTitle: (props) => <LogoTitle {...props} />,
                 headerRight: () => (
                   // <Button
@@ -77,6 +77,21 @@ const App: () => React$Node = () => {
                   //   title="Config"
                   //   color="#f4511e"
                   // />
+                  <Button
+                    onPress={() => alert('This is a button!')}
+                    title="Learn More"
+                    color="#841584"
+                    accessibilityLabel="Learn more about this purple button"
+                  />
+                ),
+              }}
+            />
+            <Stack.Screen
+              name="ThunkScreen"
+              component={ThunkScreen}
+              options={{
+                title: 'Redux-Thunk Demo',
+                headerRight: () => (
                   <Button
                     onPress={() => alert('This is a button!')}
                     title="Learn More"

@@ -39,21 +39,17 @@ const persistConfig = {
 // Middleware: Redux Persist Persisted Reducer
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-
 const sagaMiddleware = createSagaMiddleware();
 // introducing 3 middlewares: logger, thunk, saga
 const middlewares = [thunk, sagaMiddleware]; // e.g. logger ~= createLogger()
 
 // Redux: `store` is created using a root reducer function (or persistedReducer in this case)
-let store = createStore(
-  persistedReducer,
-  applyMiddleware(...middlewares)
-); 
+let store = createStore(persistedReducer, applyMiddleware(...middlewares));
 
 // Middleware: Redux Saga
-sagaMiddleware.run(watchLoadMessagesSaga);// inject
+//sagaMiddleware.run(watchLoadMessagesSaga); // inject
 
-const action = type => store.dispatch({type})
+//const action = (type) => store.dispatch({type});
 
 // Middleware: Redux Persist Persister
 let persistor = persistStore(store);

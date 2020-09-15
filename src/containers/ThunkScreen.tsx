@@ -8,7 +8,7 @@ import {
   FlatList,
   Text,
   Button,
-  ActivityIndicator,
+  //ActivityIndicator,
   //Alert,
   //ScrollView,
   //SafeAreaView,
@@ -17,7 +17,7 @@ import {
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 //import AppHeader from './AppHeader';
-import AddMessage from './AddMessage';
+import AddMessage from '../components/message/AddMessage';
 
 import {connect} from 'react-redux';
 import {
@@ -27,7 +27,7 @@ import {
   loadMessagesStarted,
   loadMessagesSuccess,
   loadMessagesError,
-} from './actions';
+} from '../components/message/actions';
 
 // Screen: MQTTDemo
 const MQTTDemo = ({

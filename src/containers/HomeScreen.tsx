@@ -29,10 +29,16 @@ const HomeScreen: () => React$Node = ({navigation}) => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
-      <Button
-        title="Go to MQTTDemo screen"
-        onPress={() => navigation.navigate('MQTTDemo', {name: 'Jane'})}
-      />
+      <View style={styles.row}>
+        <Button
+          title="redux-thunk Demo"
+          onPress={() => navigation.navigate('MQTTDemo', {})}
+        />
+        <Button
+          title="MQTT Screen"
+          onPress={() => navigation.navigate('MQTTScreen', {})}
+        />
+      </View>
       <SafeAreaView>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
@@ -113,6 +119,10 @@ const styles = StyleSheet.create({
     padding: 4,
     paddingRight: 12,
     textAlign: 'right',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
 

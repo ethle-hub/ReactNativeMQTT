@@ -4,7 +4,6 @@ import React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  ScrollView,
   View,
   Text,
   StatusBar,
@@ -12,14 +11,14 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-import {Header, Colors} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {connect} from 'react-redux';
 
 import {
   LOAD_MESSAGE_START,
-  LOAD_MESSAGE_SUCCESS,
-  LOAD_MESSAGE_ERROR,
+  // LOAD_MESSAGE_SUCCESS,
+  // LOAD_MESSAGE_ERROR,
   ADD_MESSAGE,
   DELETE_MESSAGE,
 } from '../components/message/types';
@@ -155,6 +154,8 @@ const styles = StyleSheet.create({
 
 // Map State To Props (Redux Store Passes State To Component)
 const mapStateToProps = (state /*, ownProps?*/) => {
+  console.log('what is messages now?');
+  console.log(state.messageReducer.messages);
   // return a state object
   return {
     messages: state.messageReducer.messages,
