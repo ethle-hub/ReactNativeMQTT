@@ -1,6 +1,6 @@
 // src/components/MQTTDemoApp.tsx
 
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 
 import {
   View,
@@ -20,7 +20,14 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import AddMessage from './AddMessage';
 
 import {connect} from 'react-redux';
-import {onMessageAdded, onMessageDeleted, loadMessages} from './actions';
+import {
+  onMessageAdded,
+  onMessageDeleted,
+  loadMessages,
+  loadMessagesStarted,
+  loadMessagesSuccess,
+  loadMessagesError,
+} from './actions';
 
 // Screen: MQTTDemo
 const MQTTDemo = ({
@@ -28,26 +35,54 @@ const MQTTDemo = ({
   addMessage,
   deleteMessage,
   getMessages,
+  onLoadMessagesStarted,
+  onLoadMessagesSuccess,
+  onLoadMessagesError,
   navigation,
 }) => {
   useEffect(() => {
-    // Notice: getMessages() is a function that return an asynce function
+    //Notice: getMessages() is a function that return an asynce function
     // It must be used together with redux-thunk middleware
 
     // option 1) it can be called directly like so
     getMessages();
 
-    // or alternatively, call asynchronous code in useEffect
+    // Option 2) or alternatively, call asynchronous code in useEffect
     // using an IIFE (https://medium.com/javascript-in-plain-english/https-medium-com-javascript-in-plain-english-stop-feeling-iffy-about-using-an-iife-7b0292aba174)
     //
     // (async function myFunc() {
     //   await getMessages();
     // })();
 
+    // // Option 3)
+    // onLoadMessagesStarted();
+    // fetch('https://reactnative.dev/movies.json')
+    //   .then((response) => response.json())
+    //   .then((json) => {
+    //     onLoadMessagesSuccess(json.movies);
+    //   })
+    //   .catch((error) => {
+    //     onLoadMessagesError(error);
+    //   });
+
+    console.log('i am here');
+
     return () => {
       console.log('useEffect() clean up');
     };
-  }, []);
+  }, [getMessages]);
+
+  // try {
+  //   const taskResponse = await fetch('https://reactnative.dev/movies.json');
+  //   const json = await taskResponse.json();
+  //   onLoadMessagesSuccess(json.movies);
+  // } catch (error) {
+  //   onLoadMessagesError(error.message);
+  // }
+
+  // return () => {
+  //   console.log('useEffect() clean up');
+  // };
 
   return (
     <View style={styles.container}>
@@ -209,7 +244,11 @@ const mapDispatchToProps = (dispatch /*, ownProps*/) => {
   return {
     deleteMessage: (msgId: string) => dispatch(onMessageDeleted(msgId)),
     addMessage: (msgText: string) => dispatch(onMessageAdded(msgText)),
-    getMessages: () => dispatch(loadMessages()),
+    getMessages: () => dispatch(loadMessages()), // exec this in useEffect() will run non-stop
+    onLoadMessagesStarted: () => dispatch(loadMessagesStarted()),
+    onLoadMessagesSuccess: (messages) =>
+      dispatch(loadMessagesSuccess(messages)),
+    onLoadMessagesError: (errorText) => dispatch(loadMessagesError(errorText)),
   };
 };
 

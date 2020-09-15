@@ -28,7 +28,7 @@ const messageReducer = (state = INITIAL_STATE, action) => {
   //console.log(state.messages);
   switch (action.type) {
     case ADD_MESSAGE:
-      if (!action.msgText) {
+      if (!action.payload) {
         // todo: move this Alert into UI component
         Alert.alert(
           'No item entered',
@@ -46,13 +46,13 @@ const messageReducer = (state = INITIAL_STATE, action) => {
         console.log(state);
         return {
           isLoading: false,
-          messages: [{id: uuidv4(), title: action.msgText}, ...state.messages],
+          messages: [{id: uuidv4(), title: action.payload}, ...state.messages],
         };
       }
     case DELETE_MESSAGE:
       return {
         messages:
-          state.messages.filter((item) => item.id !== action.msgId) || [],
+          state.messages.filter((item) => item.id !== action.payload) || [],
         isLoading: false,
       };
     case LOAD_MESSAGE_START:
@@ -61,10 +61,11 @@ const messageReducer = (state = INITIAL_STATE, action) => {
         isLoading: true,
       };
     case LOAD_MESSAGE_SUCCESS:
+      console.log(action.payload);
       return {
         ...state,
         isLoading: false,
-        message: action.payload || [],
+        messages: [...action.payload],
       };
     case LOAD_MESSAGE_ERROR:
       return {
@@ -72,19 +73,6 @@ const messageReducer = (state = INITIAL_STATE, action) => {
         isLoading: false,
         errorMessage: action.payload,
       };
-    // case SET_LOADING:
-    //   return {
-    //     isLoading: action.isLoading,
-    //     messages: state.messages || [],
-    //   };
-    // case SET_DATA:
-    //   console.log('showing state.messages');
-    //   console.log(state.messages);
-    //   return {
-    //     ...state,
-    //     messages: action.payload || [],
-    //     //isLoading: false,
-    //   };
     default: {
       return state;
     }

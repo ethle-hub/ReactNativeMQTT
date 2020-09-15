@@ -68,9 +68,4 @@ export const loadMessages = () => async (dispatch) => {
   } catch (error) {
     dispatch(loadMessagesError(error.message));
   }
-  // finally {
-  //   return () => {
-  //     console.log('useEffect() clean up');
-  //   };
-  // }
 };
