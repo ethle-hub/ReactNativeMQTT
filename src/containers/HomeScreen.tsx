@@ -25,49 +25,39 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-// import {
-//   connectBeebotte,
-//   disconnectBeebotte,
-// } from '../services/beebotteStreamConnector';
-
-/*
- * Stream Connector - MQTT transport
- */
-
-// const channelName = 'test';
-// const resourceName = 'vehicle';
-// const channelToken = 'token_fISEmz2Vadllxt8r'; // need to securely
-
-// // OPTIONS
-// //Replace API and secret keys by those of your account
-// var transport = {
-//   type: 'mqtt',
-//   token: channelToken,
-// };
-
-// // Create a Stream connector
-// const client = new bbt.Stream({transport: transport});
+import MQTT from 'react-native-mqtt';
 
 const HomeScreen: () => React$Node = ({navigation}) => {
   useEffect(() => {
-    // connectBeebotte('test', 'vehicle', (message) => {
-    //   console.log(`I received: ${message}`);
-    // });
+    /* create mqtt client */
+    MQTT.createClient({
+      uri: 'mqtt.beebotte.com:8883',
+      clientId: 'your_client_id',
+    })
+      .then(function (client) {
+        client.on('closed', function () {
+          console.log('mqtt.event.closed');
+        });
 
-    // client.on('connected', function () {
-    //   console.log('connect...');
-    //   //subscribe to a channel/resource
-    //   client
-    //     .subscribe(channelName, resourceName, function (message) {
-    //       console.log('client.subscribe..');
-    //       console.log(message);
-    //     })
-    //     //On successful subscription
-    //     .on('subscribed', function (sub) {
-    //       console.log('client.publish..');
-    //       client.publish(channelName, resourceName, 'Hello World');
-    //     });
-    // });
+        client.on('error', function (msg) {
+          console.log('mqtt.event.error', msg);
+        });
+
+        client.on('message', function (msg) {
+          console.log('mqtt.event.message', msg);
+        });
+
+        client.on('connect', function () {
+          console.log('connected');
+          client.subscribe('/data', 0);
+          client.publish('/data', 'test', 0, false);
+        });
+
+        client.connect();
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
 
     return () => {
       console.log('useEffect() clean up');

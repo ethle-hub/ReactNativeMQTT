@@ -83,6 +83,9 @@ project.ext.react = [
 
 apply from: "../../node_modules/react-native/react.gradle"
 
+// see https://www.npmjs.com/package/@luckfellow/react-native-mqtt
+apply plugin:'java'
+
 /**
  * Set this to true to create two separate APKs instead of one:
  *   - An APK that only works on ARM devices
@@ -207,6 +210,8 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+    // see https://www.npmjs.com/package/@luckfellow/react-native-mqtt    
+    compile project(':react-native-mqtt')
 }
 
 // Run this once to be able to run the application with BUCK
