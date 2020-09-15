@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -25,20 +25,58 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+// import {
+//   connectBeebotte,
+//   disconnectBeebotte,
+// } from '../services/beebotteStreamConnector';
+
+/*
+ * Stream Connector - MQTT transport
+ */
+
+// const channelName = 'test';
+// const resourceName = 'vehicle';
+// const channelToken = 'token_fISEmz2Vadllxt8r'; // need to securely
+
+// // OPTIONS
+// //Replace API and secret keys by those of your account
+// var transport = {
+//   type: 'mqtt',
+//   token: channelToken,
+// };
+
+// // Create a Stream connector
+// const client = new bbt.Stream({transport: transport});
+
 const HomeScreen: () => React$Node = ({navigation}) => {
+  useEffect(() => {
+    // connectBeebotte('test', 'vehicle', (message) => {
+    //   console.log(`I received: ${message}`);
+    // });
+
+    // client.on('connected', function () {
+    //   console.log('connect...');
+    //   //subscribe to a channel/resource
+    //   client
+    //     .subscribe(channelName, resourceName, function (message) {
+    //       console.log('client.subscribe..');
+    //       console.log(message);
+    //     })
+    //     //On successful subscription
+    //     .on('subscribed', function (sub) {
+    //       console.log('client.publish..');
+    //       client.publish(channelName, resourceName, 'Hello World');
+    //     });
+    // });
+
+    return () => {
+      console.log('useEffect() clean up');
+    };
+  }, []);
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
-      <View style={styles.row}>
-        <Button
-          title="redux-thunk Demo"
-          onPress={() => navigation.navigate('MQTTDemo', {})}
-        />
-        <Button
-          title="MQTT Screen"
-          onPress={() => navigation.navigate('MQTTScreen', {})}
-        />
-      </View>
       <SafeAreaView>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
@@ -50,6 +88,16 @@ const HomeScreen: () => React$Node = ({navigation}) => {
             </View>
           )}
           <View style={styles.body}>
+            <View style={styles.row}>
+              <Button
+                title="redux-thunk"
+                onPress={() => navigation.navigate('SagaScreen', {})}
+              />
+              <Button
+                title="redux-saga"
+                onPress={() => navigation.navigate('ThunkScreen', {})}
+              />
+            </View>
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>Step One</Text>
               <Text style={styles.sectionDescription}>
@@ -122,7 +170,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
 });
 

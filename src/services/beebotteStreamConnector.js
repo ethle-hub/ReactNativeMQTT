@@ -46,7 +46,7 @@ const client = new bbt.Stream({transport: transport});
  *
  * @public
  *
- * @example connector.connect('channel', 'resource', messageReceivedCallback)
+ * @example connect('channel', 'resource', messageReceivedCallback)
  */
 const connect = (channel, resource, messageReceivedCallback) => {
   console.log('==> connect');
@@ -68,11 +68,14 @@ const connect = (channel, resource, messageReceivedCallback) => {
  *
  * @public
  *
- * @example connector.disconnect()
+ * @example disconnect()
  */
 const disconnect = () => {
   console.log('==> disconnect...');
   client.disconnect();
 };
 
-export {connect, disconnect};
+export default {
+  connectBeebotte: connect,
+  disconnectBeebotte: disconnect,
+};

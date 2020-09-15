@@ -14,5 +14,10 @@ module.exports = {
       },
     }),
   },
+  // resolver: {
+  //   extraNodeModules: {
+  //     beebotte: require.resolve('beebotte'),
+  //   },
+  // },
   server: {port: 8088},
 };
