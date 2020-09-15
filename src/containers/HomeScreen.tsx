@@ -25,49 +25,72 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-// import {
-//   connectBeebotte,
-//   disconnectBeebotte,
-// } from '../services/beebotteStreamConnector';
+import * as Mqtt from 'react-native-native-mqtt';
 
-/*
- * Stream Connector - MQTT transport
- */
+// beebotte's Authentication
+const beebotteAuthentication = {
+  channelName: 'test',
+  resourceName: 'vehicle',
+  channelToken: 'token_fISEmz2Vadllxt8r', // should use Identity and Access Management (IAM) tokens instead
+  mqttHost: 'mqtt.beebotte.com',
+  ssl: true,
+  port: 8883,
+  type: 'mqtt',
+  apiKey: 'WDB9PMCbQtbDEnqhWRu5hvk3', // see https://beebotte.com/docs/auth
+};
 
-// const channelName = 'test';
-// const resourceName = 'vehicle';
-// const channelToken = 'token_fISEmz2Vadllxt8r'; // need to securely
+// e.g. ConnectionOptions for beebotte
+const connectionOptions = {
+  clientId: 'CAR-M001', //beebotteAuthentication.apiKey, // 'CLIENT_ID',
+  //cleanSession?: boolean;
+  //keepAlive?: number;
+  //timeout?: number;
+  //maxInFlightMessages?: number;
+  //autoReconnect?: boolean;
+  //username?: string; // from Beebotte's account
+  //password?: '', // from Beebotte's account
+  tls: beebotteAuthentication.channelToken, // e.g. caDer?: Buffer; cert?: string; key?: string; p12?: Buffer; pass?: string;
+  allowUntrustedCA: true,
+  enableSsl: beebotteAuthentication.ssl,
+};
 
-// // OPTIONS
-// //Replace API and secret keys by those of your account
-// var transport = {
-//   type: 'mqtt',
-//   token: channelToken,
-// };
-
-// // Create a Stream connector
-// const client = new bbt.Stream({transport: transport});
+const client = new Mqtt.Client(
+  `${beebotteAuthentication.mqttHost}:${beebotteAuthentication.port}`, // e.g. '[SCHEME]://[URL]:[PORT]'
+);
 
 const HomeScreen: () => React$Node = ({navigation}) => {
   useEffect(() => {
-    // connectBeebotte('test', 'vehicle', (message) => {
-    //   console.log(`I received: ${message}`);
-    // });
+    client.connect(
+      // options
+      connectionOptions,
+      // callback
+      (err) => {
+        if (err) {
+          console.log(`Mqtt error: ${err}`);
+        } else {
+          console.log('Mqtt connected');
+        }
+      },
+    );
 
-    // client.on('connected', function () {
-    //   console.log('connect...');
-    //   //subscribe to a channel/resource
-    //   client
-    //     .subscribe(channelName, resourceName, function (message) {
-    //       console.log('client.subscribe..');
-    //       console.log(message);
-    //     })
-    //     //On successful subscription
-    //     .on('subscribed', function (sub) {
-    //       console.log('client.publish..');
-    //       client.publish(channelName, resourceName, 'Hello World');
-    //     });
-    // });
+    client.on(Mqtt.Event.Message, (topic: string, message: Buffer) => {
+      console.log('Mqtt Message:', topic, message.toString());
+    });
+
+    client.on(Mqtt.Event.Connect, () => {
+      console.log('MQTT Connect');
+      // subscribe(topics, qos)
+      const singleTopic = `${beebotteAuthentication.channelName}.${beebotteAuthentication.resourceName}`;
+      client.subscribe([singleTopic], [0]);
+    });
+
+    client.on(Mqtt.Event.Error, (error: string) => {
+      console.log('MQTT Error:', error);
+    });
+
+    client.on(Mqtt.Event.Disconnect, (cause: string) => {
+      console.log('MQTT Disconnect:', cause);
+    });
 
     return () => {
       console.log('useEffect() clean up');
