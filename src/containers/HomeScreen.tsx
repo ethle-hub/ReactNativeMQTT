@@ -25,54 +25,61 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-// import {
-//   connectBeebotte,
-//   disconnectBeebotte,
-// } from '../services/beebotteStreamConnector';
+import {v4 as uuidv4} from 'uuid';
+import init from 'react_native_mqtt';
+import AsyncStorage from '@react-native-community/async-storage';
 
-/*
- * Stream Connector - MQTT transport
- */
+init({
+  size: 10000,
+  storageBackend: AsyncStorage,
+  defaultExpires: 1000 * 3600 * 24,
+  enableCache: true,
+  reconnect: true,
+  sync: {},
+});
 
-// const channelName = 'test';
-// const resourceName = 'vehicle';
-// const channelToken = 'token_fISEmz2Vadllxt8r'; // need to securely
-
-// // OPTIONS
-// //Replace API and secret keys by those of your account
-// var transport = {
-//   type: 'mqtt',
-//   token: channelToken,
-// };
-
-// // Create a Stream connector
-// const client = new bbt.Stream({transport: transport});
+const clientID = uuidv4();
 
 const HomeScreen: () => React$Node = ({navigation}) => {
-  useEffect(() => {
-    // connectBeebotte('test', 'vehicle', (message) => {
-    //   console.log(`I received: ${message}`);
-    // });
+  const onConnect = () => {
+    console.log('onConnect onSuccess');
+  };
 
-    // client.on('connected', function () {
-    //   console.log('connect...');
-    //   //subscribe to a channel/resource
-    //   client
-    //     .subscribe(channelName, resourceName, function (message) {
-    //       console.log('client.subscribe..');
-    //       console.log(message);
-    //     })
-    //     //On successful subscription
-    //     .on('subscribed', function (sub) {
-    //       console.log('client.publish..');
-    //       client.publish(channelName, resourceName, 'Hello World');
-    //     });
-    // });
+  const onConnectionLost = (responseObject) => {
+    if (responseObject.errorCode !== 0) {
+      console.log('onConnectionLost:' + responseObject.errorMessage);
+    }
+  };
+
+  const onMessageArrived = (message) => {
+    console.log('onMessageArrived:' + message.payloadString);
+  };
+
+  const client = new Paho.MQTT.Client('mqtt.beebotte.com', 8883, clientID);
+  client.onConnectionLost = onConnectionLost;
+  client.onMessageArrived = onMessageArrived;
+  client.onConnected = (reconnect, url) => {
+    console.log(reconnect);
+    console.log(url);
+  };
+
+  const connectMe = () => {
+    console.log('Now calling connect()');
+    client.connect({onSuccess: onConnect, useSSL: true});
+  };
+
+  const disconnectMe = () => {
+    console.log('Now calling disconnect()');
+    client.disconnect();
+  };
+
+  useEffect(() => {
+    connectMe();
 
     return () => {
       console.log('useEffect() clean up');
     };
-  }, []);
+  });
 
   return (
     <>
@@ -89,14 +96,16 @@ const HomeScreen: () => React$Node = ({navigation}) => {
           )}
           <View style={styles.body}>
             <View style={styles.row}>
-              <Button
+              {/* <Button
                 title="redux-thunk"
                 onPress={() => navigation.navigate('SagaScreen', {})}
               />
               <Button
                 title="redux-saga"
                 onPress={() => navigation.navigate('ThunkScreen', {})}
-              />
+              /> */}
+              <Button title="connect" onPress={connectMe} />
+              <Button title="disconnect" onPress={disconnectMe} />
             </View>
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>Step One</Text>
