@@ -25,49 +25,71 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-// import {
-//   connectBeebotte,
-//   disconnectBeebotte,
-// } from '../services/beebotteStreamConnector';
+import io from 'socket.io-client';
 
-/*
- * Stream Connector - MQTT transport
- */
-
-// const channelName = 'test';
-// const resourceName = 'vehicle';
-// const channelToken = 'token_fISEmz2Vadllxt8r'; // need to securely
-
-// // OPTIONS
-// //Replace API and secret keys by those of your account
-// var transport = {
-//   type: 'mqtt',
-//   token: channelToken,
-// };
-
-// // Create a Stream connector
-// const client = new bbt.Stream({transport: transport});
+// Initialize the socket manager for given URL
+const socket = io('https://ws.beebotte.com', {
+  // localhost/myownpath/?EIO=3&transport=polling&sid=<id>
+  path: 'socket.io', // namespace
+  autoConnect: false,
+  transports: ['websocket'],
+  query: {
+    token: 'token_fISEmz2Vadllxt8r',
+  },
+  //timeout: 85000,
+});
 
 const HomeScreen: () => React$Node = ({navigation}) => {
   useEffect(() => {
-    // connectBeebotte('test', 'vehicle', (message) => {
-    //   console.log(`I received: ${message}`);
-    // });
+    console.log('before socket connect');
 
-    // client.on('connected', function () {
-    //   console.log('connect...');
-    //   //subscribe to a channel/resource
-    //   client
-    //     .subscribe(channelName, resourceName, function (message) {
-    //       console.log('client.subscribe..');
-    //       console.log(message);
-    //     })
-    //     //On successful subscription
-    //     .on('subscribed', function (sub) {
-    //       console.log('client.publish..');
-    //       client.publish(channelName, resourceName, 'Hello World');
-    //     });
-    // });
+    socket
+      .on('connect_error', (error) => {
+        console.log('connect_error');
+        console.log(error);
+      })
+      .on('connect', () => {
+        console.log('connect with ctoken');
+
+        // const chat = io.of('/chat');
+        // chat.emit('an event sent to all connected clients in chat namespace');
+      })
+      // .on('reconnect_attempt', () => {
+      //   // on reconnection, reset the transports option, as the Websocket
+      //   // connection may have failed (caused by proxy, firewall, browser, ...)
+      //   console.log('reconnect_attempt');
+      //   //console.log(socket.io.opts.transports);
+      //   //socket.io.opts.transports = ['polling', 'websocket'];
+      // })
+      // .on('reconnecting', (attemptNumber) => {
+      //   console.log(`reconnecting: ${attemptNumber}`);
+      // })
+      // .on('ping', () => {
+      //   // Fired when a ping packet is written out to the server.
+      //   console.log('ping');
+      // })
+      .on('pong', (ms) => {
+        // Fired when a pong is received from the server.
+        console.log(`${ms}ms elapsed since ping packet`);
+      })
+      .on('disconnect', () => {
+        console.log('disconnect');
+        //socket.open();
+      })
+      // .on('subscribed', (data) => {
+      //   console.log('event: subscribed');
+      //   console.log(data);
+      // })
+      // .on('unsubscribed', (data) => {
+      //   console.log('event: unsubscribed');
+      //   console.log(data);
+      // })
+      .on('message', (data) => {
+        console.log('event: message');
+        console.log(data);
+      });
+
+    socket.open();
 
     return () => {
       console.log('useEffect() clean up');
