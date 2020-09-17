@@ -25,71 +25,171 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import io from 'socket.io-client';
+import socketIO from 'socket.io-client';
 
-// Initialize the socket manager for given URL
-const socket = io('https://ws.beebotte.com', {
-  // localhost/myownpath/?EIO=3&transport=polling&sid=<id>
-  path: 'socket.io', // namespace
-  autoConnect: false,
-  transports: ['websocket'],
-  query: {
-    token: 'token_fISEmz2Vadllxt8r',
+// Initialize Socket IO
+// client-connection-lifecycle: https://socket.io/docs/client-connection-lifecycle/
+// Additional options: https://socket.io/docs/client-initialization/
+// this 'socketIO is equevalent to node_modules/beebotte/lib/socketio.js
+const socket = socketIO(
+  'https://ws.beebotte.com', // https://ws.localhost/myownpath/?EIO=3&transport=polling&sid=<id>
+  {
+    // default configuration
+    //path: '/socket.io',
+    reconnection: true,
+    // reconnectionAttempts: Infinity,
+    // reconnectionDelay: 1000,
+    // reconnectionDelayMax: 5000,
+    // randomizationFactor: 0.5,
+    // timeout: 20000,
+    // autoConnect: true,
+    query: {
+      token: 'token_fISEmz2Vadllxt8r',
+    },
+    transports: ['websocket'],
   },
-  //timeout: 85000,
-});
+);
 
 const HomeScreen: () => React$Node = ({navigation}) => {
   useEffect(() => {
-    console.log('before socket connect');
+    socket.on('connect', () => {
+      socket.emit('test.vehicle', {some: 'data'});
+      console.log('connect with ctoken');
 
-    socket
-      .on('connect_error', (error) => {
-        console.log('connect_error');
-        console.log(error);
-      })
-      .on('connect', () => {
-        console.log('connect with ctoken');
-
-        // const chat = io.of('/chat');
-        // chat.emit('an event sent to all connected clients in chat namespace');
-      })
-      // .on('reconnect_attempt', () => {
-      //   // on reconnection, reset the transports option, as the Websocket
-      //   // connection may have failed (caused by proxy, firewall, browser, ...)
-      //   console.log('reconnect_attempt');
-      //   //console.log(socket.io.opts.transports);
-      //   //socket.io.opts.transports = ['polling', 'websocket'];
-      // })
-      // .on('reconnecting', (attemptNumber) => {
-      //   console.log(`reconnecting: ${attemptNumber}`);
-      // })
-      // .on('ping', () => {
-      //   // Fired when a ping packet is written out to the server.
-      //   console.log('ping');
-      // })
-      .on('pong', (ms) => {
-        // Fired when a pong is received from the server.
-        console.log(`${ms}ms elapsed since ping packet`);
-      })
-      .on('disconnect', () => {
-        console.log('disconnect');
-        //socket.open();
-      })
-      // .on('subscribed', (data) => {
-      //   console.log('event: subscribed');
-      //   console.log(data);
-      // })
-      // .on('unsubscribed', (data) => {
-      //   console.log('event: unsubscribed');
-      //   console.log(data);
-      // })
-      .on('message', (data) => {
-        console.log('event: message');
-        console.log(data);
+      // sending to the client
+      //if (
+      socket.send('control', 'subscribe', {
+        channel: 'test',
+        resource: 'vehicle',
       });
+      // ) {
+      console.log('control => subscribe');
+      //} else {
+      socket.emit('subscribeError', {
+        error: 'Unexpected error encountered while unsubscribing',
+        channel: 'test',
+        resource: 'vehicle',
+      });
+      console.log('control => subscribeError');
+      //}
+    });
 
-    socket.open();
+    // handle the event sent with socket.send()
+    socket.on('getsid', (sid) => {
+      console.log(`sid: ${sid}`);
+    });
+
+    // handle the event sent with socket.emit()
+    socket.on('control', (msg) => {
+      console.log('control');
+      console.log(msg);
+    });
+    socket.on('subscribe', (msg) => {
+      console.log('subscribe');
+      console.log(msg);
+    });
+    socket.on('subscribeError', (msg) => {
+      console.log('subscribeError');
+      console.log(msg);
+    });
+
+    // switch (msg.event) {
+    // case 'subscribed':
+    //   var subscription = self.bbt.getSubscription(
+    //     msg.data.channel,
+    //     msg.data.resource
+    //   )
+
+    //   if (subscription) {
+    //     subscription.subscribe()
+    //     self.bbt.emit('subscribed', subscription)
+    //   }
+    //   break
+
+    // case 'subscribeError':
+    //   var subscription = self.bbt.getSubscription(
+    //     msg.data.channel,
+    //     msg.data.resource
+    //   )
+
+    //   if (subscription) {
+    //     subscription.unsetSubscribeTimer()
+    //     self.bbt.emit('subscribeError', msg.message, subscription)
+    //   }
+    //   break
+
+    // case 'unsubscribed':
+    //   var subscription = self.bbt.getSubscription(
+    //     msg.data.channel,
+    //     msg.data.resource
+    //   )
+
+    //   if (subscription) {
+    //     subscription.unsubscribe()
+    //     self.bbt.emit('unsubscribed', subscription)
+    //     self.bbt.removeSubscription(
+    //       subscription.channel,
+    //       subscription.resource
+    //     )
+    //     subscription = null
+    //   }
+    //   break
+
+    // case 'unsubscribeError':
+    //   var subscription = self.bbt.getSubscription(
+    //     msg.data.channel,
+    //     msg.data.resource
+    //   )
+
+    //   if (subscription) {
+    //     subscription.unsetUnsubscribeTimer()
+    //     self.bbt.emit('unsubscribeError', msg.message, subscription)
+    //   }
+    //   break
+
+    // default:
+    //   break
+    //}
+
+    //  connect_error 	Fired upon a connection error
+    socket.on('connect_error', (error) => {
+      console.log(`connect_error => ${error}`);
+
+      setTimeout(() => {
+        socket.connect();
+      }, 2000);
+    });
+
+    //socket.on('reconnect_attempt', () => {
+    //   // on reconnection, reset the transports option, as the Websocket
+    //   // connection may have failed (caused by proxy, firewall, browser, ...)
+    //   console.log('reconnect_attempt');
+    //   console.log(socket.io.opts.transports);
+    //   //socket.io.opts.transports = ['polling', 'websocket'];
+    // });
+
+    // socket.on('reconnecting', (attemptNumber) => {
+    //   console.log(`reconnecting => ${attemptNumber}`);
+    // });
+
+    // .on('ping', () => {
+    //   // Fired when a ping packet is written out to the server.
+    //   console.log('ping');
+    // })
+
+    socket.on('pong', (ms) => {
+      // Fired when a pong is received from the server.
+      console.log(`${ms}ms elapsed since ping packet`);
+    });
+
+    // socket.on('disconnect', () => {
+    //   console.log('disconnect');
+    //   setTimeout(() => {
+    //     socket.connect();
+    //   }, 500);
+    // });
+
+    socket.connect();
 
     return () => {
       console.log('useEffect() clean up');
@@ -111,13 +211,34 @@ const HomeScreen: () => React$Node = ({navigation}) => {
           )}
           <View style={styles.body}>
             <View style={styles.row}>
-              <Button
+              {/* <Button
                 title="redux-thunk"
                 onPress={() => navigation.navigate('SagaScreen', {})}
               />
               <Button
                 title="redux-saga"
                 onPress={() => navigation.navigate('ThunkScreen', {})}
+              /> */}
+              <Button
+                title="Send message"
+                onPress={() => {
+                  socket.send('Hello!');
+                  console.log('sent');
+                }}
+              />
+              <Button
+                title="Emit event"
+                onPress={() => {
+                  // socket.io.emit(
+                  //   'test/vehicle',
+                  //   'Hello!',
+                  //   {mr: 'john'},
+                  //   Uint8Array.from([1, 2, 3, 4]),
+                  // );
+
+                  socket.emit('presence-test.vehicle', {some: 'data'});
+                  console.log('emitted');
+                }}
               />
             </View>
             <View style={styles.sectionContainer}>
